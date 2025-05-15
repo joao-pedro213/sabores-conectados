@@ -1,0 +1,12 @@
+version: 3
+
+tasks:
+  app-build:
+    desc: "Executa uma build limpa da aplicação usando o Gradle."
+    cmds:
+      - "./gradlew clean"
+      - "./gradlew build"
+
+  docker-run:
+    desc: "Inicia a aplicação em um container Docker."
+    cmd: "docker compose up -d"
