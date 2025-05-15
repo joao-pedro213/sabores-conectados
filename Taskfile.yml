@@ -1,29 +1,12 @@
 version: 3
 
-vars:
-  ENV_FILE_LOCAL: "local.env"
-  APP_SERVICE: "backend"
-  DB_SERVICE: "database"
-
 tasks:
-  docker-up:
-    desc: "Inicia todos os containers Docker definidos."
+  app-build:
+    desc: "Executa uma build limpa da aplicação usando o Gradle."
     cmds:
-      - "docker compose --env-file {{.ENV_FILE_LOCAL}} build --no-cache {{.APP_SERVICE}}"
-      - "docker compose --env-file {{.ENV_FILE_LOCAL}} up --detach"
+      - "./gradlew clean"
+      - "./gradlew build"
 
-  docker-database-up:
-    desc: "Inicia apenas o container do banco de dados."
-    cmd: "docker compose up --detach {{.DB_SERVICE}}"
-
-  docker-down:
-    desc: "Para todos os containers Docker."
-    cmd: "docker compose down"
-
-  show-backend-logs:
-    desc: "Mostra os logs do container da aplicação."
-    cmd: "docker compose logs --follow {{.APP_SERVICE}}"
-
-  show-database-logs:
-    desc: "Mostra os logs do container do banco de dados."
-    cmd: "docker compose logs --follow {{.DB_SERVICE}}"
+  docker-run:
+    desc: "Inicia a aplicação em um container Docker."
+    cmd: "docker compose up -d"
