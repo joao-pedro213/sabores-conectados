@@ -9,6 +9,6 @@ ENV DB_URL=$DB_URL
 ENV DB_USER=$DB_USER
 ENV DB_PASSWORD=$DB_PASSWORD
 
-COPY ${JAR_FILE} app.jar
+COPY $JAR_FILE app.jar
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]

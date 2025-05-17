@@ -1,7 +1,6 @@
 version: 3
 
 vars:
-  COMPOSE_FILE: "docker-compose.yml"
   ENV_FILE_LOCAL: "local.env"
   APP_SERVICE: "backend"
   DB_SERVICE: "database"
