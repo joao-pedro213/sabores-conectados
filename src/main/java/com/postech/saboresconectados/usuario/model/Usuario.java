@@ -1,14 +1,12 @@
 package com.postech.saboresconectados.usuario.model;
 
 import com.postech.saboresconectados.usuario.model.enumerator.TipoUsuario;
-import lombok.Builder;
 import lombok.Data;
 
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
-@Builder
 public class Usuario {
 
     private UUID id;
@@ -25,6 +23,6 @@ public class Usuario {
 
     private String endereco;
 
-    private OffsetDateTime ultimaAlteracao;
+    private Date ultimaAlteracao;
 
 }

@@ -7,8 +7,10 @@ vars:
 
 tasks:
   run:
-    desc: "Inicia a aplicação em um container Docker (com dependências)."
-    deps: [build, docker-up]
+    desc: "Executa uma build limpa da aplicação e inicia todos os containers Docker definidos."
+    cmds:
+      - task build
+      - task docker-up
 
   build:
     desc: "Executa uma build limpa da aplicação."
@@ -18,7 +20,9 @@ tasks:
 
   docker-up:
     desc: "Inicia todos os containers Docker definidos."
-    cmd: "docker compose --env-file {{.ENV_FILE_LOCAL}} up --detach"
+    cmds:
+      - "docker compose --env-file {{.ENV_FILE_LOCAL}} build --no-cache {{.APP_SERVICE}}"
+      - "docker compose --env-file {{.ENV_FILE_LOCAL}} up --detach"
 
   docker-up-database:
     desc: "Inicia apenas o container do banco de dados."
@@ -28,10 +32,10 @@ tasks:
     desc: "Para todos os containers Docker."
     cmd: "docker compose down"
 
-  logs-backend:
+  show-backend-logs:
     desc: "Mostra os logs do container da aplicação."
     cmd: "docker compose logs --follow {{.APP_SERVICE}}"
 
-  logs-database:
+  show-database-logs:
     desc: "Mostra os logs do container do banco de dados."
     cmd: "docker compose logs --follow {{.DB_SERVICE}}"
