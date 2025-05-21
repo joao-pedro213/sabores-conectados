@@ -11,8 +11,8 @@ public interface UsuarioRepository {
 
     Optional<Usuario> buscarPorId(UUID id);
 
-    int atualizar(Usuario usuario);
+    Integer atualizar(Usuario usuario);
 
-    int remover(UUID id);
+    Integer remover(UUID id);
 
 }
