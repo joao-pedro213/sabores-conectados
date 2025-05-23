@@ -1,25 +1,22 @@
-package com.postech.saboresconectados.usuario.model;
+package com.postech.saboresconectados.usuario.dto;
 
-import com.postech.saboresconectados.usuario.model.enumerator.TipoUsuario;
 import lombok.Data;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
-public class Usuario {
+public class UsuarioDto {
 
     private UUID id;
 
     private String nome;
 
-    private TipoUsuario tipoUsuario;
+    private String tipoUsuario;
 
     private String email;
 
     private String login;
-
-    private String senha;
 
     private String endereco;
 

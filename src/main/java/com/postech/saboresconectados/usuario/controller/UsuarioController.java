@@ -1,10 +1,7 @@
 package com.postech.saboresconectados.usuario.controller;
 
-import com.postech.saboresconectados.usuario.dto.ChangePasswordDto;
-import com.postech.saboresconectados.usuario.dto.NewUsuarioRequestDto;
-import com.postech.saboresconectados.usuario.dto.UpdateUsuarioRequestDto;
-import com.postech.saboresconectados.usuario.dto.UsuarioLoginDto;
-import com.postech.saboresconectados.usuario.dto.UsuarioResponseDto;
+import com.postech.saboresconectados.usuario.dto.NewUsuarioDto;
+import com.postech.saboresconectados.usuario.dto.UsuarioDto;
 import com.postech.saboresconectados.usuario.mapper.UsuarioMapper;
 import com.postech.saboresconectados.usuario.model.Usuario;
 import com.postech.saboresconectados.usuario.service.UsuarioService;
@@ -12,16 +9,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/usuario")
@@ -31,52 +19,11 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<UsuarioResponseDto> create(@RequestBody @Valid NewUsuarioRequestDto newUsuarioRequestDto) {
-        Usuario usuario = UsuarioMapper.newUsuarioRequestDtoToUsuario(newUsuarioRequestDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(UsuarioMapper.usuarioToUsuarioResponseDto(this.usuarioService.create(usuario)));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDto> findById(@PathVariable String id) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(UsuarioMapper.usuarioToUsuarioResponseDto(this.usuarioService.findById(UUID.fromString(id))));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> update(
-            @PathVariable String id,
-            @RequestBody @Valid UpdateUsuarioRequestDto updateUsuarioRequestDto) {
-        Usuario usuario = UsuarioMapper.updateUsuarioRequestDtoToUsuario(updateUsuarioRequestDto);
-        this.usuarioService.update(UUID.fromString(id), usuario);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @PostMapping("/{id}/alterar-senha")
-    public ResponseEntity<Void> changePassword(
-            @PathVariable String id,
-            @RequestBody @Valid ChangePasswordDto changePasswordDto
-            ) {
-        this.usuarioService
-                .changePassword(
-                        UUID.fromString(id),
-                        changePasswordDto.getSenhaAtual(),
-                        changePasswordDto.getSenhaNova());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody UsuarioLoginDto usuarioLoginDto) {
-        this.usuarioService.login(usuarioLoginDto.getLogin(), usuarioLoginDto.getSenha());
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable String id) {
-        this.usuarioService.deleteById(UUID.fromString(id));
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<UsuarioDto> register(@RequestBody @Valid NewUsuarioDto newUsuarioDto) {
+        Usuario newUsuario = UsuarioMapper.newUsuarioDtoToUsuario(newUsuarioDto);
+        newUsuario = this.usuarioService.create(newUsuario);
+        UsuarioDto usuarioDto = UsuarioMapper.usuarioToUsuarioDto(newUsuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDto);
     }
 
 }
