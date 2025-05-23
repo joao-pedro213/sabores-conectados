@@ -3,8 +3,8 @@ CREATE TABLE usuarios (
     nome VARCHAR(255) NOT NULL,
     tipo VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    login VARCHAR(255) NOT NULL,
+    login VARCHAR(255) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
     endereco VARCHAR(255) NOT NULL,
-    ultima_alteracao DATE NOT NULL
+    ultima_alteracao TIMESTAMP WITH TIME ZONE NOT NULL
 );
