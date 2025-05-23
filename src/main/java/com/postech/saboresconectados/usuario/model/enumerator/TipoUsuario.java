@@ -8,10 +8,10 @@ public enum TipoUsuario {
     DONO_DE_RESTAURANTE("Dono de Restaurante"),
     CLIENTE("Cliente");
 
-    private final String valorTipoUsuario;
+    private final String value;
 
-    TipoUsuario(String valorTipoUsuario) {
-        this.valorTipoUsuario = valorTipoUsuario;
+    TipoUsuario(String value) {
+        this.value = value;
     }
 
 }

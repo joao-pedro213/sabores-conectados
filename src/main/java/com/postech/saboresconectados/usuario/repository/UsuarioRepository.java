@@ -7,12 +7,12 @@ import java.util.UUID;
 
 public interface UsuarioRepository {
 
-    Integer criar(Usuario usuario);
+    Integer create(Usuario usuario);
 
-    Optional<Usuario> buscarPorId(UUID id);
+    Optional<Usuario> findById(UUID id);
 
-    Integer atualizar(Usuario usuario);
+    Integer update(Usuario usuario);
 
-    Integer remover(UUID id);
+    Integer remove(UUID id);
 
 }
