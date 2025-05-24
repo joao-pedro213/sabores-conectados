@@ -1,5 +1,6 @@
 package com.postech.saboresconectados.usuario.service;
 
+import com.postech.saboresconectados.exception.ResourceNotFoundException;
 import com.postech.saboresconectados.usuario.model.Usuario;
 import com.postech.saboresconectados.usuario.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,14 @@ public class UsuarioService {
         usuario.setUltimaAlteracao(OffsetDateTime.now());
         this.usuarioRepository.create(usuario);
         return usuario;
+    }
+
+    public void update(UUID id, Usuario usuario) {
+        usuario.setUltimaAlteracao(OffsetDateTime.now());
+        Integer numberOfAffectedRows = this.usuarioRepository.update(id, usuario);
+        if (numberOfAffectedRows == 0) {
+            throw new ResourceNotFoundException(id.toString());
+        }
     }
 
 }

@@ -16,10 +16,9 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
 
     @Override
     public Integer create(Usuario usuario) {
-       String sql = "INSERT INTO usuarios (id, nome, email, login, senha, tipo, endereco, ultima_alteracao) " +
-               "VALUES (:id, :nome, :email, :login, :senha, :tipo, :endereco, :ultima_alteracao);";
        return this.jdbcClient
-               .sql(sql)
+               .sql("INSERT INTO usuarios (id, nome, email, login, senha, tipo, endereco, ultima_alteracao) " +
+                    "VALUES (:id, :nome, :email, :login, :senha, :tipo, :endereco, :ultima_alteracao);")
                .param("id", usuario.getId())
                .param("nome", usuario.getNome())
                .param("email", usuario.getEmail())
@@ -37,8 +36,17 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
     }
 
     @Override
-    public Integer update(Usuario usuario) {
-        return 0;
+    public Integer update(UUID id, Usuario usuario) {
+        return this.jdbcClient
+                .sql("UPDATE usuarios " +
+                     "SET nome = :nome, email = :email, endereco = :endereco, ultima_alteracao = :ultima_alteracao " +
+                     "WHERE id = :id;")
+                .param("nome", usuario.getNome())
+                .param("email", usuario.getEmail())
+                .param("endereco", usuario.getEndereco())
+                .param("ultima_alteracao", usuario.getUltimaAlteracao())
+                .param("id", id)
+                .update();
     }
 
     @Override

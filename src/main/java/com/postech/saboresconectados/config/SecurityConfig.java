@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> {
                     authorize
                             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                            .requestMatchers("/usuario").permitAll()
+                            .requestMatchers("/usuario", "/usuario/**").permitAll()
                             .anyRequest().authenticated();
                 })
                 .httpBasic(withDefaults());
