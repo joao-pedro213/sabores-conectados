@@ -1,11 +1,16 @@
 package com.postech.saboresconectados.usuario.dto;
 
 import com.postech.saboresconectados.usuario.model.enumerator.TipoUsuario;
-import jakarta.validation.constraints.*;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class NewUsuarioDto {
+public class NewUsuarioRequestDto {
 
     @NotBlank(message = "Nome não pode estar em branco")
     @Size(min = 3, max = 100, message = "Nome deve ter entre 3 e 100 caracteres")

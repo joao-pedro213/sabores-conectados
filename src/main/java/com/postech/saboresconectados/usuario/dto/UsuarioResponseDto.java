@@ -1,12 +1,14 @@
 package com.postech.saboresconectados.usuario.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
-public class UsuarioDto {
+@Builder
+public class UsuarioResponseDto {
 
     private UUID id;
 
