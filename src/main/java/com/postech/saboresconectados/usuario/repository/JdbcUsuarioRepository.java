@@ -39,7 +39,7 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
     public Integer update(UUID id, Usuario usuario) {
         return this.jdbcClient
                 .sql("UPDATE usuarios " +
-                     "SET nome = :nome, email = :email, endereco = :endereco, ultima_alteracao = :ultima_alteracao" +
+                     "SET nome = :nome, email = :email, endereco = :endereco, ultima_alteracao = :ultima_alteracao " +
                      "WHERE id = :id;")
                 .param("nome", usuario.getNome())
                 .param("email", usuario.getEmail())
