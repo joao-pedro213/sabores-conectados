@@ -1,6 +1,7 @@
 package com.postech.saboresconectados.exception;
 
 import com.postech.saboresconectados.exception.dto.ExceptionDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.List;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -46,12 +48,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ExceptionDto> handleResourceNotFoundException(ResourceNotFoundException exception) {
         return ResponseEntity
-                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .status(HttpStatus.NOT_FOUND)
                 .body(
                         ExceptionDto
                                 .builder()
                                 .erro("Recurso não econtrado")
                                 .detalhes(exception.getMessage())
+                                .build());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ExceptionDto> handleGenericRuntimeException(RuntimeException exception) {
+        log.error("Um erro inesperado: {}", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        ExceptionDto
+                                .builder()
+                                .erro("Erro desconhecido")
+                                .detalhes("Verifique os logs da aplicação para mais detalhes")
                                 .build());
     }
 
