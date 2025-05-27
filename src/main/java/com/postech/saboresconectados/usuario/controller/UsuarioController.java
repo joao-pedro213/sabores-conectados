@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,6 +42,13 @@ public class UsuarioController {
         Usuario usuario = UsuarioMapper.updateUsuarioRequestDtoToUsuario(updateUsuarioRequestDto);
         this.usuarioService.update(UUID.fromString(id), usuario);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDto> findById(@PathVariable String id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(UsuarioMapper.usuarioToUsuarioResponseDto(this.usuarioService.findById(UUID.fromString(id))));
     }
 
 }
