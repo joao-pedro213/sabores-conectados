@@ -1,10 +1,12 @@
 package com.postech.saboresconectados.usuario.repository;
 
 import com.postech.saboresconectados.usuario.model.Usuario;
+import com.postech.saboresconectados.usuario.model.enumerator.TipoUsuario;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,7 +34,23 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
 
     @Override
     public Optional<Usuario> findById(UUID id) {
-        return Optional.of(null);
+        return this.jdbcClient
+                .sql("SELECT id, nome, tipo, email, login, senha, endereco, ultima_alteracao " +
+                     "FROM usuarios " +
+                     "WHERE id = :id;")
+                .param("id", id)
+                .query((resultSet, rowNumber) -> Usuario
+                        .builder()
+                        .id(UUID.fromString(resultSet.getString("id")))
+                        .nome(resultSet.getString("nome"))
+                        .tipoUsuario(TipoUsuario.fromValue(resultSet.getString("tipo")))
+                        .email(resultSet.getString("email"))
+                        .login(resultSet.getString("login"))
+                        .senha(resultSet.getString("senha"))
+                        .endereco(resultSet.getString("endereco"))
+                        .ultimaAlteracao(resultSet.getObject("ultima_alteracao", OffsetDateTime.class))
+                        .build())
+                .optional();
     }
 
     @Override
