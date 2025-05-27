@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @Service
@@ -21,7 +22,7 @@ public class UsuarioService {
     public Usuario create(Usuario usuario) {
         usuario.setId(UUID.randomUUID());
         usuario.setSenha(this.passwordEncoder.encode(usuario.getSenha()));
-        usuario.setUltimaAlteracao(OffsetDateTime.now());
+        usuario.setUltimaAlteracao(OffsetDateTime.now(ZoneOffset.UTC));
         this.usuarioRepository.create(usuario);
         return usuario;
     }
@@ -32,6 +33,12 @@ public class UsuarioService {
         if (numberOfAffectedRows == 0) {
             throw new ResourceNotFoundException(id.toString());
         }
+    }
+
+    public Usuario findById(UUID id) {
+        return this.usuarioRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id.toString()));
     }
 
 }
