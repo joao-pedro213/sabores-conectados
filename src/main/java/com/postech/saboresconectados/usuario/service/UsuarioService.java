@@ -41,4 +41,11 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResourceNotFoundException(id.toString()));
     }
 
+    public void deleteById(UUID id) {
+        Integer numberOfAffectedRows = this.usuarioRepository.deleteById(id);
+        if (numberOfAffectedRows == 0) {
+            throw new ResourceNotFoundException(id.toString());
+        }
+    }
+
 }
