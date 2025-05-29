@@ -13,6 +13,6 @@ public interface UsuarioRepository {
 
     Integer update(UUID id, Usuario usuario);
 
-    Integer remove(UUID id);
+    Integer deleteById(UUID id);
 
 }
