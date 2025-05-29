@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,8 +18,8 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
     private JdbcClient jdbcClient;
 
     @Override
-    public Integer create(Usuario usuario) {
-       return this.jdbcClient
+    public void create(Usuario usuario) {
+       this.jdbcClient
                .sql("INSERT INTO usuarios (id, nome, email, login, senha, tipo, endereco, ultima_alteracao) " +
                     "VALUES (:id, :nome, :email, :login, :senha, :tipo, :endereco, :ultima_alteracao);")
                .param("id", usuario.getId())
@@ -28,7 +29,7 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
                .param("senha", usuario.getSenha())
                .param("tipo", usuario.getTipoUsuario().getValue())
                .param("endereco", usuario.getEndereco())
-               .param("ultima_alteracao", usuario.getUltimaAlteracao())
+               .param("ultima_alteracao", OffsetDateTime.now(ZoneOffset.UTC))
                .update();
     }
 
@@ -62,7 +63,7 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
                 .param("nome", usuario.getNome())
                 .param("email", usuario.getEmail())
                 .param("endereco", usuario.getEndereco())
-                .param("ultima_alteracao", usuario.getUltimaAlteracao())
+                .param("ultima_alteracao", OffsetDateTime.now(ZoneOffset.UTC))
                 .param("id", id)
                 .update();
     }
@@ -74,4 +75,15 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
                 .param("id", id)
                 .update();
     }
+
+    @Override
+    public void changePassword(UUID id, String newPassword) {
+        this.jdbcClient
+                .sql("UPDATE usuarios SET senha = :senha, ultima_alteracao = :ultima_alteracao WHERE id = :id;")
+                .param("senha", newPassword)
+                .param("ultima_alteracao", OffsetDateTime.now(ZoneOffset.UTC))
+                .param("id", id)
+                .update();
+    }
+
 }
