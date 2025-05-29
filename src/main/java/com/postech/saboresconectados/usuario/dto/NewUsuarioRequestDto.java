@@ -1,5 +1,6 @@
 package com.postech.saboresconectados.usuario.dto;
 
+import com.postech.saboresconectados.usuario.controller.UsuarioValidationPatterns;
 import com.postech.saboresconectados.usuario.model.enumerator.TipoUsuario;
 
 import jakarta.validation.constraints.Email;
@@ -26,14 +27,16 @@ public class NewUsuarioRequestDto {
 
     @NotBlank(message = "Login não pode estar em branco")
     @Size(min = 5, max = 50, message = "Login deve ter entre 5 e 50 caracteres")
-    @Pattern(regexp = "^[a-zA-Z0-9._-]{5,50}$", message = "Login pode conter apenas letras, números, '.', '_' e '-'")
+    @Pattern(
+            regexp = UsuarioValidationPatterns.LOGIN_PATTERN,
+            message = UsuarioValidationPatterns.INVALID_LOGIN_PATTERN_MESSAGE)
     private String login;
 
     @NotBlank(message = "Senha não pode estar em branco")
     @Size(min = 8, message = "Senha deve ter no mínimo 8 caracteres")
     @Pattern(
-        regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{8,}$",
-        message = "Senha deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial")
+            regexp = UsuarioValidationPatterns.PASSWORD_PATTERN,
+            message = UsuarioValidationPatterns.INVALID_PASSWORD_PATTERN_MESSAGE)
     private String senha;
 
     @NotBlank(message = "Endereço não pode estar em branco")
