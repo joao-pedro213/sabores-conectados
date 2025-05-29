@@ -3,6 +3,7 @@ package com.postech.saboresconectados.usuario.controller;
 import com.postech.saboresconectados.usuario.dto.ChangePasswordDto;
 import com.postech.saboresconectados.usuario.dto.NewUsuarioRequestDto;
 import com.postech.saboresconectados.usuario.dto.UpdateUsuarioRequestDto;
+import com.postech.saboresconectados.usuario.dto.UsuarioLoginDto;
 import com.postech.saboresconectados.usuario.dto.UsuarioResponseDto;
 import com.postech.saboresconectados.usuario.mapper.UsuarioMapper;
 import com.postech.saboresconectados.usuario.model.Usuario;
@@ -64,6 +65,12 @@ public class UsuarioController {
                         changePasswordDto.getSenhaAtual(),
                         changePasswordDto.getSenhaNova());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(@RequestBody UsuarioLoginDto usuarioLoginDto) {
+        this.usuarioService.login(usuarioLoginDto.getLogin(), usuarioLoginDto.getSenha());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
