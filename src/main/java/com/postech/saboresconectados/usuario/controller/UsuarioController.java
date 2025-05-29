@@ -1,5 +1,6 @@
 package com.postech.saboresconectados.usuario.controller;
 
+import com.postech.saboresconectados.usuario.dto.ChangePasswordDto;
 import com.postech.saboresconectados.usuario.dto.NewUsuarioRequestDto;
 import com.postech.saboresconectados.usuario.dto.UpdateUsuarioRequestDto;
 import com.postech.saboresconectados.usuario.dto.UsuarioResponseDto;
@@ -36,6 +37,13 @@ public class UsuarioController {
                 .body(UsuarioMapper.usuarioToUsuarioResponseDto(this.usuarioService.create(usuario)));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDto> findById(@PathVariable String id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(UsuarioMapper.usuarioToUsuarioResponseDto(this.usuarioService.findById(UUID.fromString(id))));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable String id,
@@ -45,11 +53,17 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDto> findById(@PathVariable String id) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(UsuarioMapper.usuarioToUsuarioResponseDto(this.usuarioService.findById(UUID.fromString(id))));
+    @PostMapping("/{id}/alterar-senha")
+    public ResponseEntity<Void> changePassword(
+            @PathVariable String id,
+            @RequestBody @Valid ChangePasswordDto changePasswordDto
+            ) {
+        this.usuarioService
+                .changePassword(
+                        UUID.fromString(id),
+                        changePasswordDto.getSenhaAtual(),
+                        changePasswordDto.getSenhaNova());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{id}")

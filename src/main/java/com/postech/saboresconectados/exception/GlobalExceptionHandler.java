@@ -1,6 +1,7 @@
 package com.postech.saboresconectados.exception;
 
 import com.postech.saboresconectados.exception.dto.ExceptionDto;
+import com.postech.saboresconectados.usuario.exception.InvalidCurrentPasswordException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,18 @@ public class GlobalExceptionHandler {
                         ExceptionDto
                                 .builder()
                                 .erro("Recurso não econtrado")
+                                .detalhes(exception.getMessage())
+                                .build());
+    }
+
+    @ExceptionHandler(InvalidCurrentPasswordException.class)
+    public ResponseEntity<ExceptionDto> handleInvalidOldPasswordException(InvalidCurrentPasswordException exception) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        ExceptionDto
+                                .builder()
+                                .erro("Senha incorreta")
                                 .detalhes(exception.getMessage())
                                 .build());
     }
