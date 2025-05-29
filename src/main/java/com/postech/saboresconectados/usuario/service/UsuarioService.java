@@ -2,6 +2,7 @@ package com.postech.saboresconectados.usuario.service;
 
 import com.postech.saboresconectados.exception.ResourceNotFoundException;
 import com.postech.saboresconectados.usuario.exception.InvalidCurrentPasswordException;
+import com.postech.saboresconectados.usuario.exception.InvalidLoginCredentialsException;
 import com.postech.saboresconectados.usuario.model.Usuario;
 import com.postech.saboresconectados.usuario.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -39,6 +41,13 @@ public class UsuarioService {
         Integer numberOfAffectedRows = this.usuarioRepository.update(id, usuario);
         if (numberOfAffectedRows == 0) {
             throw new ResourceNotFoundException(id.toString());
+        }
+    }
+
+    public void login(String login, String password) {
+        Optional<Usuario> usuario = this.usuarioRepository.findByLogin(login);
+        if (usuario.isEmpty() || !this.passwordMatches(password, usuario.get().getSenha())) {
+            throw new InvalidLoginCredentialsException();
         }
     }
 

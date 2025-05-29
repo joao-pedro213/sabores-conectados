@@ -11,6 +11,8 @@ public interface UsuarioRepository {
 
     Optional<Usuario> findById(UUID id);
 
+    Optional<Usuario> findByLogin(String login);
+
     Integer update(UUID id, Usuario usuario);
 
     Integer deleteById(UUID id);
