@@ -55,6 +55,27 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
     }
 
     @Override
+    public Optional<Usuario> findByLogin(String login) {
+        return this.jdbcClient
+                .sql("SELECT id, nome, tipo, email, login, senha, endereco, ultima_alteracao " +
+                        "FROM usuarios " +
+                        "WHERE login = :login;")
+                .param("login", login)
+                .query((resultSet, rowNumber) -> Usuario
+                        .builder()
+                        .id(UUID.fromString(resultSet.getString("id")))
+                        .nome(resultSet.getString("nome"))
+                        .tipoUsuario(TipoUsuario.fromValue(resultSet.getString("tipo")))
+                        .email(resultSet.getString("email"))
+                        .login(resultSet.getString("login"))
+                        .senha(resultSet.getString("senha"))
+                        .endereco(resultSet.getString("endereco"))
+                        .ultimaAlteracao(resultSet.getObject("ultima_alteracao", OffsetDateTime.class))
+                        .build())
+                .optional();
+    }
+
+    @Override
     public Integer update(UUID id, Usuario usuario) {
         return this.jdbcClient
                 .sql("UPDATE usuarios " +
