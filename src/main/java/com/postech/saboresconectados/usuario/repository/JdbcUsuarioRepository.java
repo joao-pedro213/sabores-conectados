@@ -68,7 +68,10 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
     }
 
     @Override
-    public Integer remove(UUID id) {
-        return 0;
+    public Integer deleteById(UUID id) {
+        return this.jdbcClient
+                .sql("DELETE FROM usuarios where id = :id")
+                .param("id", id)
+                .update();
     }
 }
