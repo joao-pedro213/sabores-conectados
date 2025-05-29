@@ -2,6 +2,7 @@ package com.postech.saboresconectados.exception;
 
 import com.postech.saboresconectados.exception.dto.ExceptionDto;
 import com.postech.saboresconectados.usuario.exception.InvalidCurrentPasswordException;
+import com.postech.saboresconectados.usuario.exception.InvalidLoginCredentialsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -66,6 +67,19 @@ public class GlobalExceptionHandler {
                         ExceptionDto
                                 .builder()
                                 .erro("Senha incorreta")
+                                .detalhes(exception.getMessage())
+                                .build());
+    }
+
+    @ExceptionHandler(InvalidLoginCredentialsException.class)
+    public ResponseEntity<ExceptionDto> handleInvalidLoginCredentialsException(
+            InvalidLoginCredentialsException exception) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        ExceptionDto
+                                .builder()
+                                .erro("Credenciais inválidas")
                                 .detalhes(exception.getMessage())
                                 .build());
     }
