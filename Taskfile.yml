@@ -6,25 +6,13 @@ vars:
   DB_SERVICE: "database"
 
 tasks:
-  run:
-    desc: "Executa uma build limpa da aplicação e inicia todos os containers Docker definidos."
-    cmds:
-      - task build
-      - task docker-up
-
-  build:
-    desc: "Executa uma build limpa da aplicação."
-    cmds:
-      - "./gradlew clean"
-      - "./gradlew build -x test"
-
   docker-up:
     desc: "Inicia todos os containers Docker definidos."
     cmds:
       - "docker compose --env-file {{.ENV_FILE_LOCAL}} build --no-cache {{.APP_SERVICE}}"
       - "docker compose --env-file {{.ENV_FILE_LOCAL}} up --detach"
 
-  docker-up-database:
+  docker-database-up:
     desc: "Inicia apenas o container do banco de dados."
     cmd: "docker compose up --detach {{.DB_SERVICE}}"
 
