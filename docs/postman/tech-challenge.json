@@ -131,7 +131,7 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nome\": \"Lucas\",\n  \"tipoUsuario\": \"Dono de Restaurante\",\n  \"email\": \"lucas.123@gmail.com\",\n  \"login\": \"lucas.123\",\n  \"senha\": \"Mkahs!d3\",\n  \"endereco\": \"729 Beilfuss Court\"\n}",
+          "raw": "{\n  \"nome\": \"Lucas\",\n  \"tipoUsuario\": \"DONO_DE_RESTAURANTE\",\n  \"email\": \"lucas.123@gmail.com\",\n  \"login\": \"lucas.321\",\n  \"senha\": \"Mkahs!d3\",\n  \"endereco\": \"729 Beilfuss Court\"\n}",
           "options": {
             "raw": {
               "language": "json"
