@@ -1,0 +1,219 @@
+{
+  "info": {
+    "name": "tech-challenge",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Alterar Senha do Usuário",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{host}}/usuario/d6f6e4d2-94be-4444-9935-2bc7c953d91b/alterar-senha",
+          "protocol": "",
+          "host": [
+            "{{host}}"
+          ],
+          "path": [
+            "usuario",
+            "d6f6e4d2-94be-4444-9935-2bc7c953d91b",
+            "alterar-senha"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senhaAtual\": \"Mkahs!d3\",\n  \"senhaNova\": \"AS33a!cc\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Atualizar Usuário",
+      "event": [],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{host}}/usuario/d6f6e4d2-94be-4444-9935-2bc7c953d91b",
+          "protocol": "",
+          "host": [
+            "{{host}}"
+          ],
+          "path": [
+            "usuario",
+            "d6f6e4d2-94be-4444-9935-2bc7c953d91b"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Lucas\",\n  \"email\": \"novo-email@gmail.com\",\n  \"endereco\": \"729 Beilfuss Court\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Buscar Usuário por id",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{host}}/usuario/d6f6e4d2-94be-4444-9935-2bc7c953d91b",
+          "protocol": "",
+          "host": [
+            "{{host}}"
+          ],
+          "path": [
+            "usuario",
+            "d6f6e4d2-94be-4444-9935-2bc7c953d91b"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Criar Usuário",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{host}}/usuario",
+          "protocol": "",
+          "host": [
+            "{{host}}"
+          ],
+          "path": [
+            "usuario"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Lucas\",\n  \"tipoUsuario\": \"DONO_DE_RESTAURANTE\",\n  \"email\": \"lucas.123@gmail.com\",\n  \"login\": \"lucas.321\",\n  \"senha\": \"Mkahs!d3\",\n  \"endereco\": \"729 Beilfuss Court\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Deletar Usuário por id",
+      "event": [],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{host}}/usuario/d6f6e4d2-94be-4444-9935-2bc7c953d91b",
+          "protocol": "",
+          "host": [
+            "{{host}}"
+          ],
+          "path": [
+            "usuario",
+            "d6f6e4d2-94be-4444-9935-2bc7c953d91b"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Login Usuário",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{host}}/usuario/login",
+          "protocol": "",
+          "host": [
+            "{{host}}"
+          ],
+          "path": [
+            "usuario",
+            "login"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"login\": \"lucas.123\",\n  \"senha\": \"AS33a!cc\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "host",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
