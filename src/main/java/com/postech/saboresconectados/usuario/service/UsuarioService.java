@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.usuario.service;
 
-import com.postech.saboresconectados.exception.ResourceNotFoundException;
+import com.postech.saboresconectados.core.exception.ResourceNotFoundException;
 import com.postech.saboresconectados.usuario.exception.InvalidCurrentPasswordException;
 import com.postech.saboresconectados.usuario.exception.InvalidLoginCredentialsException;
 import com.postech.saboresconectados.usuario.model.Usuario;
