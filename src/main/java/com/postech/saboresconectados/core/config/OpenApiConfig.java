@@ -1,4 +1,4 @@
-package com.postech.saboresconectados.config;
+package com.postech.saboresconectados.core.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.OpenAPI;
