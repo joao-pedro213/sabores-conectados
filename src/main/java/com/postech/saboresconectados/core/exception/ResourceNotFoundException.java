@@ -1,4 +1,4 @@
-package com.postech.saboresconectados.exception;
+package com.postech.saboresconectados.core.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 

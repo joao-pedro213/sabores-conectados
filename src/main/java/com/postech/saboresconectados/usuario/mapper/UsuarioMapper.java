@@ -4,6 +4,7 @@ import com.postech.saboresconectados.usuario.dto.NewUsuarioRequestDto;
 import com.postech.saboresconectados.usuario.dto.UpdateUsuarioRequestDto;
 import com.postech.saboresconectados.usuario.dto.UsuarioResponseDto;
 import com.postech.saboresconectados.usuario.model.Usuario;
+import com.postech.saboresconectados.usuario.model.enumerator.TipoUsuario;
 
 public class UsuarioMapper {
 
@@ -11,7 +12,7 @@ public class UsuarioMapper {
         return Usuario
                 .builder()
                 .nome(newUsuarioRequestDto.getNome())
-                .tipoUsuario(newUsuarioRequestDto.getTipoUsuario())
+                .tipoUsuario(TipoUsuario.fromValue(newUsuarioRequestDto.getTipoUsuario()))
                 .email(newUsuarioRequestDto.getEmail())
                 .login(newUsuarioRequestDto.getLogin())
                 .senha(newUsuarioRequestDto.getSenha())

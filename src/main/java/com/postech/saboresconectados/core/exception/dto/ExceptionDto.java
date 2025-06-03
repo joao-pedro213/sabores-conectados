@@ -1,4 +1,4 @@
-package com.postech.saboresconectados.exception.dto;
+package com.postech.saboresconectados.core.exception.dto;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,5 +1,6 @@
 package com.postech.saboresconectados.usuario.dto;
 
+import com.postech.saboresconectados.core.validator.InEnum;
 import com.postech.saboresconectados.usuario.controller.UsuarioValidationPatterns;
 import com.postech.saboresconectados.usuario.model.enumerator.TipoUsuario;
 
@@ -17,8 +18,9 @@ public class NewUsuarioRequestDto {
     @Size(min = 3, max = 100, message = "Nome deve ter entre 3 e 100 caracteres")
     private String nome;
 
-    @NotNull(message = "Tipo de usuário não pode ser nulo")
-    private TipoUsuario tipoUsuario;
+    @NotBlank(message = "Tipo de usuário não pode estar em branco")
+    @InEnum(enumClass = TipoUsuario.class)
+    private String tipoUsuario;
 
     @NotBlank(message = "Email não pode estar em branco")
     @Email(message = "Email deve ser um formato válido")

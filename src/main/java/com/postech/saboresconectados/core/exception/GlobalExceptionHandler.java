@@ -1,6 +1,6 @@
-package com.postech.saboresconectados.exception;
+package com.postech.saboresconectados.core.exception;
 
-import com.postech.saboresconectados.exception.dto.ExceptionDto;
+import com.postech.saboresconectados.core.exception.dto.ExceptionDto;
 import com.postech.saboresconectados.usuario.exception.InvalidCurrentPasswordException;
 import com.postech.saboresconectados.usuario.exception.InvalidLoginCredentialsException;
 import lombok.extern.slf4j.Slf4j;
