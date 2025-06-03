@@ -65,9 +65,6 @@ public class UsuarioService {
 
     public void deleteById(UUID id) {
         Integer numberOfAffectedRows = this.usuarioRepository.deleteById(id);
-        if (numberOfAffectedRows == 0) {
-            throw new ResourceNotFoundException(id.toString());
-        }
     }
 
 }
