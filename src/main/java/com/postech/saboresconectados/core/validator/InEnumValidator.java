@@ -38,7 +38,7 @@ public class InEnumValidator implements ConstraintValidator<InEnum, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        boolean isValid = acceptedValues.contains(value.toUpperCase());
+        boolean isValid = acceptedValues.contains(value);
         if (!isValid) {
             String finalMessage = this.message
                     .replace("{values}", String.join(", ", this.acceptedValues));
