@@ -1,4 +1,4 @@
-package com.postech.saboresconectados.core.config;
+package com.postech.saboresconectados.infrastructure.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
