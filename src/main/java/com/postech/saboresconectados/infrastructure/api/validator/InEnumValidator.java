@@ -1,4 +1,4 @@
-package com.postech.saboresconectados.core.validator;
+package com.postech.saboresconectados.infrastructure.api.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
