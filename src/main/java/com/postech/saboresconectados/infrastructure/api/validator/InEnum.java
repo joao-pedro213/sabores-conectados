@@ -23,7 +23,7 @@ public @interface InEnum {
 
     Class<? extends Enum<?>> enumClass();
 
-    String message() default "O valor fornecido não é válido. Opções disponíveis: {values}";
+        String message() default "The value provided is not valid. Available options: {values}";
 
     Class<?>[] groups() default {};
 

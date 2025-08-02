@@ -29,7 +29,7 @@ public class InEnumValidator implements ConstraintValidator<InEnum, String> {
                         return (String) getValueMethod.invoke(e);
                     } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
                         throw new IllegalStateException(
-                                "Erro ao tentar invocar método getValue() no enum " + e.getClass().getName(),
+                                "Error trying to invoke getValue() method on enum" + e.getClass().getName(),
                                 exception);
                     }
                 })
