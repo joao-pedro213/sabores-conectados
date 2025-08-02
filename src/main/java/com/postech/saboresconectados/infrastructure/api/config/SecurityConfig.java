@@ -19,12 +19,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorize) -> {
-                    authorize
-                            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                            .requestMatchers("/usuario", "/usuario/**").permitAll()
-                            .anyRequest().authenticated();
-                })
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/user", "/user/**").permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(withDefaults());
         return http.build();
     }
