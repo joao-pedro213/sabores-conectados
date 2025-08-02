@@ -16,7 +16,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity(name = "usuarios")
+@Entity(name = "users")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
@@ -28,10 +28,10 @@ public class UserModel {
     @GeneratedValue
     private UUID id;
 
-    @Column(name = "nome", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "tipo", nullable = false)
+    @Column(name = "type", nullable = false)
     private String userType;
 
     @Column(nullable = false, unique = true)
@@ -40,13 +40,13 @@ public class UserModel {
     @Column(nullable = false)
     private String login;
 
-    @Column(name = "senha", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "endereco", nullable = false)
+    @Column(name = "address", nullable = false)
     private String address;
 
     @LastModifiedDate
-    @Column(name = "ultima_alteracao", nullable = false)
+    @Column(name = "last_update", nullable = false)
     private LocalDateTime lastUpdated;
 }

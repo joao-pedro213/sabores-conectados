@@ -7,7 +7,6 @@ import com.postech.saboresconectados.core.domain.exceptions.InvalidPasswordExcep
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.time.LocalDateTime;
@@ -15,7 +14,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Slf4j
 @Getter
 @Setter
 @Builder(toBuilder = true)
