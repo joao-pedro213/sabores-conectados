@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "title": "Business Exception",
+  "status": 400,
+  "detail": "Business rule violation",
+  "instance": "/user"
+}
