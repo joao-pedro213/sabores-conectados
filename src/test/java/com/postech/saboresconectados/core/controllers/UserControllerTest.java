@@ -117,7 +117,6 @@ class UserControllerTest {
         this.mockedStaticDeleteUserByIdUseCase
                 .when(() -> DeleteUserByIdUseCase.create(this.mockUserGateway))
                 .thenReturn(this.mockDeleteUserByIdUseCase);
-        this.userSampleData = new LinkedHashMap<>();
         this.mockedStaticLoginUserUseCase = mockStatic(LoginUserUseCase.class);
         this.mockedStaticLoginUserUseCase
                 .when(() -> LoginUserUseCase.create(this.mockUserGateway))
@@ -126,12 +125,41 @@ class UserControllerTest {
         this.mockedStaticChangeUserPasswordUseCase
                 .when(() -> ChangeUserPasswordUseCase.create(this.mockUserGateway))
                 .thenReturn(this.mockChangeUserPasswordUseCase);
+        this.userSampleData = new LinkedHashMap<>();
         this.userSampleData.put("name", "Marcos");
         this.userSampleData.put("userType", UserType.CUSTOMER.getValue());
         this.userSampleData.put("email", "marcos@mail.com");
         this.userSampleData.put("login", "marcos635");
         this.userSampleData.put("password", "09231s121!G");
         this.userSampleData.put("address", "82495 Xavier Keys, Emersonburgh, KS 65336-8213");
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (this.mockedStaticUserGateway != null) {
+            this.mockedStaticUserGateway.close();
+        }
+        if (this.mockedStaticUserPresenter != null) {
+            this.mockedStaticUserPresenter.close();
+        }
+        if (this.mockedStaticCreateUserUseCase != null) {
+            this.mockedStaticCreateUserUseCase.close();
+        }
+        if (this.mockedStaticRetrieveUserByIdUseCase != null) {
+            this.mockedStaticRetrieveUserByIdUseCase.close();
+        }
+        if (this.mockedStaticUpdateUserUseCase != null) {
+            this.mockedStaticUpdateUserUseCase.close();
+        }
+        if (this.mockedStaticDeleteUserByIdUseCase != null) {
+            this.mockedStaticDeleteUserByIdUseCase.close();
+        }
+        if (this.mockedStaticLoginUserUseCase != null) {
+            this.mockedStaticLoginUserUseCase.close();
+        }
+        if (this.mockedStaticChangeUserPasswordUseCase != null) {
+            this.mockedStaticChangeUserPasswordUseCase.close();
+        }
     }
 
     @Test
@@ -154,15 +182,12 @@ class UserControllerTest {
         this.mockedStaticUserPresenter.verify(UserPresenter::create, times(1));
         verify(this.mockUserPresenter, times(1)).toDto(createdUser);
         final User capturedUser = argument.getValue();
-        final User expectedUser = this.userObjectMother
-                .createSampleUser(this.userSampleData)
+        final User expectedUser = createdUser
                 .toBuilder()
                 .id(null)
                 .lastUpdated(null)
                 .build();
-        assertThat(capturedUser)
-                .usingRecursiveComparison()
-                .isEqualTo(expectedUser);
+        assertThat(capturedUser).usingRecursiveComparison().isEqualTo(expectedUser);
         assertThat(userOutputDto).isNotNull().isEqualTo(createdUserOutputDto);
     }
 
@@ -268,33 +293,5 @@ class UserControllerTest {
         this.mockedStaticChangeUserPasswordUseCase
                 .verify(() -> ChangeUserPasswordUseCase.create(this.mockUserGateway), times(1));
         verify(this.mockChangeUserPasswordUseCase, times(1)).execute(login, oldPassword, newPassword);
-    }
-
-    @AfterEach
-    void tearDown() {
-        if (this.mockedStaticUserGateway != null) {
-            this.mockedStaticUserGateway.close();
-        }
-        if (this.mockedStaticUserPresenter != null) {
-            this.mockedStaticUserPresenter.close();
-        }
-        if (this.mockedStaticCreateUserUseCase != null) {
-            this.mockedStaticCreateUserUseCase.close();
-        }
-        if (this.mockedStaticRetrieveUserByIdUseCase != null) {
-            this.mockedStaticRetrieveUserByIdUseCase.close();
-        }
-        if (this.mockedStaticUpdateUserUseCase != null) {
-            this.mockedStaticUpdateUserUseCase.close();
-        }
-        if (this.mockedStaticDeleteUserByIdUseCase != null) {
-            this.mockedStaticDeleteUserByIdUseCase.close();
-        }
-        if (this.mockedStaticLoginUserUseCase != null) {
-            this.mockedStaticLoginUserUseCase.close();
-        }
-        if (this.mockedStaticChangeUserPasswordUseCase != null) {
-            this.mockedStaticChangeUserPasswordUseCase.close();
-        }
     }
 }

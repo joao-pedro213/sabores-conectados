@@ -1,7 +1,7 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
 import com.postech.saboresconectados.core.domain.entities.User;
-import com.postech.saboresconectados.core.domain.exceptions.UserNotFoundException;
+import com.postech.saboresconectados.core.domain.exceptions.EntityNotFoundException;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import lombok.AllArgsConstructor;
 
@@ -16,6 +16,6 @@ public class RetrieveUserByIdUseCase {
     }
 
     public User execute(UUID id) {
-        return this.userGateway.findById(id).orElseThrow(UserNotFoundException::new);
+        return this.userGateway.findById(id).orElseThrow(() -> new EntityNotFoundException("User"));
     }
 }

@@ -1,6 +1,5 @@
 package com.postech.saboresconectados.infrastructure.data;
 
-import com.postech.saboresconectados.core.domain.entities.User;
 import com.postech.saboresconectados.core.dtos.UserDto;
 import com.postech.saboresconectados.core.interfaces.UserDataSource;
 import com.postech.saboresconectados.infrastructure.data.datamappers.UserMapper;

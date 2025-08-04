@@ -2,7 +2,7 @@ package com.postech.saboresconectados.core.domain.usecases;
 
 import com.postech.saboresconectados.core.domain.entities.User;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
-import com.postech.saboresconectados.core.domain.exceptions.UserNotFoundException;
+import com.postech.saboresconectados.core.domain.exceptions.EntityNotFoundException;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import com.postech.saboresconectados.helpers.UserObjectMother;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -112,8 +112,8 @@ class UpdateUserUseCaseTest {
     }
 
     @Test
-    @DisplayName("should throw a UserNotFoundException when the user is not found in the database")
-    void shouldThrowUserNotFoundException() {
+    @DisplayName("should throw a EntityNotFoundException when the user is not found in the database")
+    void shouldThrowEntityNotFoundException() {
         // Given
         final User userWithUpdates = User
                 .builder()
@@ -126,7 +126,7 @@ class UpdateUserUseCaseTest {
 
         // When & Then
         assertThatThrownBy(() -> this.useCase.execute(ID, NEW_NAME, NEW_EMAIL, NEW_ADDRESS))
-                .isInstanceOf(UserNotFoundException.class);
+                .isInstanceOf(EntityNotFoundException.class);
         verify(this.mockUserGateway, times(1)).findById(ID);
         verify(this.mockUserGateway, times(0)).save(userWithUpdates);
     }

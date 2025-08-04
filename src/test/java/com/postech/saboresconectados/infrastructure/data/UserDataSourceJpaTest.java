@@ -40,6 +40,13 @@ class UserDataSourceJpaTest {
         this.mockedStaticUserMapper = mockStatic(UserMapper.class);
     }
 
+    @AfterEach
+    void tearDown() {
+        if (this.mockedStaticUserMapper != null) {
+            this.mockedStaticUserMapper.close();
+        }
+    }
+
     @Test
     void shouldSaveUser() {
         // Given
@@ -125,18 +132,11 @@ class UserDataSourceJpaTest {
     }
 
     @Test
-    void shouldDeleteByIdUserById() {
+    void shouldDeleteUserById() {
         // When
         this.dataSource.deleteById(ID);
 
         // Then
         verify(this.repository, times(1)).deleteById(ID);
-    }
-
-    @AfterEach
-    void tearDown() {
-        if (this.mockedStaticUserMapper != null) {
-            this.mockedStaticUserMapper.close();
-        }
     }
 }

@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(value = {"/infrastructure/data/repositories/user/test-sample.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(value = {"/infrastructure/data/repositories/user-test-sample.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class UserRepositoryTest {
     @Autowired
     private UserRepository repository;
