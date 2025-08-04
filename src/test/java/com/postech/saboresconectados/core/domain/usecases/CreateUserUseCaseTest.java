@@ -1,7 +1,7 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
 import com.postech.saboresconectados.core.domain.entities.User;
-import com.postech.saboresconectados.core.domain.exceptions.UserAlreadyExistsException;
+import com.postech.saboresconectados.core.domain.exceptions.EntityAlreadyExistsException;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.junit.jupiter.api.AfterEach;
@@ -67,7 +67,7 @@ class CreateUserUseCaseTest {
     }
 
     @Test
-    @DisplayName("should throw a UserAlreadyExistsException when the new user is found in the database before its creation")
+    @DisplayName("should throw a EntityAlreadyExistsException when the new user is found in the database before its creation")
     void shouldThrowUserAlreadyExist() {
         // Given
         final User newUser = User
@@ -79,7 +79,7 @@ class CreateUserUseCaseTest {
         when(this.mockUserGateway.findByLogin(newUser.getLogin())).thenReturn(Optional.of(newUser));
 
         // When & Then
-        assertThatThrownBy(() -> this.useCase.execute(newUser)).isInstanceOf(UserAlreadyExistsException.class);
+        assertThatThrownBy(() -> this.useCase.execute(newUser)).isInstanceOf(EntityAlreadyExistsException.class);
         verify(this.mockUserGateway, times(1)).findByLogin(newUser.getLogin());
         verify(this.mockUserGateway, times(0)).save(newUser);
     }

@@ -29,7 +29,7 @@ class DeleteUserByIdUseCaseTest {
 
     @Test
     @DisplayName("should delete a User from the database")
-    void shouldFindUserById() {
+    void shouldDeleteUserById() {
         // When
         this.useCase.execute(ID);
 

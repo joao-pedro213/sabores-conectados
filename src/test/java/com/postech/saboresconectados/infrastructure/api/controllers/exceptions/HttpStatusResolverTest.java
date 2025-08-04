@@ -1,12 +1,13 @@
 package com.postech.saboresconectados.infrastructure.api.controllers.exceptions;
 
 import com.postech.saboresconectados.core.domain.exceptions.BusinessException;
+import com.postech.saboresconectados.core.domain.exceptions.EntityAlreadyExistsException;
+import com.postech.saboresconectados.core.domain.exceptions.EntityNotFoundException;
 import com.postech.saboresconectados.core.domain.exceptions.InvalidEmailException;
 import com.postech.saboresconectados.core.domain.exceptions.InvalidLoginCredentialsException;
 import com.postech.saboresconectados.core.domain.exceptions.InvalidLoginException;
 import com.postech.saboresconectados.core.domain.exceptions.InvalidPasswordException;
-import com.postech.saboresconectados.core.domain.exceptions.UserAlreadyExistsException;
-import com.postech.saboresconectados.core.domain.exceptions.UserNotFoundException;
+import com.postech.saboresconectados.core.domain.exceptions.UserNotRestaurantOwnerException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -50,9 +51,45 @@ class HttpStatusResolverTest {
     }
 
     @Test
-    void shouldReturnConflictForUserAlreadyExistException() {
+    void shouldReturnUnauthorizedForInvalidLoginCredentialsException() {
         // Given
-        BusinessException exception = new UserAlreadyExistsException();
+        BusinessException exception = new InvalidLoginCredentialsException();
+
+        // When
+        HttpStatus httpStatus = HttpStatusResolver.resolveHttpStatusForBusinessException(exception);
+
+        // Then
+        assertThat(httpStatus).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    void shouldReturnForbiddenForUserNotRestaurantOwnerException() {
+        // Given
+        BusinessException exception = new UserNotRestaurantOwnerException();
+
+        // When
+        HttpStatus httpStatus = HttpStatusResolver.resolveHttpStatusForBusinessException(exception);
+
+        // Then
+        assertThat(httpStatus).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    void shouldReturnNotFoundForEntityNotFoundException() {
+        // Given
+        BusinessException exception = new EntityNotFoundException("Test");
+
+        // When
+        HttpStatus httpStatus = HttpStatusResolver.resolveHttpStatusForBusinessException(exception);
+
+        // Then
+        assertThat(httpStatus).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void shouldReturnConflictForEntityAlreadyExistException() {
+        // Given
+        BusinessException exception = new EntityAlreadyExistsException("Test");
 
         // When
         HttpStatus httpStatus = HttpStatusResolver.resolveHttpStatusForBusinessException(exception);
@@ -71,29 +108,5 @@ class HttpStatusResolverTest {
 
         // Then
         assertThat(httpStatus).isEqualTo(HttpStatus.BAD_REQUEST);
-    }
-
-    @Test
-    void shouldReturnNotFoundForUserNotFoundException() {
-        // Given
-        BusinessException exception = new UserNotFoundException();
-
-        // When
-        HttpStatus httpStatus = HttpStatusResolver.resolveHttpStatusForBusinessException(exception);
-
-        // Then
-        assertThat(httpStatus).isEqualTo(HttpStatus.NOT_FOUND);
-    }
-
-    @Test
-    void shouldReturnUnauthorizedForInvalidLoginCredentialsException() {
-        // Given
-        BusinessException exception = new InvalidLoginCredentialsException();
-
-        // When
-        HttpStatus httpStatus = HttpStatusResolver.resolveHttpStatusForBusinessException(exception);
-
-        // Then
-        assertThat(httpStatus).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 }
