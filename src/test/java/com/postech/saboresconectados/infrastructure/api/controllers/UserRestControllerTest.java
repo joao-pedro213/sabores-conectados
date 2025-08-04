@@ -57,9 +57,9 @@ class UserRestControllerTest {
     @Mock
     private UserController mockUserController;
 
-    private MockedStatic<HttpStatusResolver> mockedStaticHttpStatusResolver;
-
     private MockedStatic<UserController> mockedStaticUserController;
+
+    private MockedStatic<HttpStatusResolver> mockedStaticHttpStatusResolver;
 
     private MockedStatic<UserMapper> mockedStaticUserMapper;
 
@@ -78,7 +78,23 @@ class UserRestControllerTest {
     void setUp() {
         this.mockedStaticHttpStatusResolver = mockStatic(HttpStatusResolver.class);
         this.mockedStaticUserController = mockStatic(UserController.class);
+        this.mockedStaticUserController
+                .when(() -> UserController.create(any(UserDataSourceJpa.class)))
+                .thenReturn(this.mockUserController);
         this.mockedStaticUserMapper = mockStatic(UserMapper.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (this.mockedStaticHttpStatusResolver != null) {
+            this.mockedStaticHttpStatusResolver.close();
+        }
+        if (this.mockedStaticUserController != null) {
+            this.mockedStaticUserController.close();
+        }
+        if (this.mockedStaticUserMapper != null) {
+            this.mockedStaticUserMapper.close();
+        }
     }
 
     @Test
@@ -90,9 +106,6 @@ class UserRestControllerTest {
         this.mockedStaticUserMapper
                 .when(() -> UserMapper.toNewUserDto(any(NewUserRequestDto.class)))
                 .thenReturn(mappedNewUserDto);
-        this.mockedStaticUserController
-                .when(() -> UserController.create(any(UserDataSourceJpa.class)))
-                .thenReturn(this.mockUserController);
         final UserOutputDto userOutputDto = this.userObjectMother
                 .createSampleUserOutputDto(this.objectMapper.readValue(requestBody, LinkedHashMap.class))
                 .toBuilder()
@@ -144,9 +157,6 @@ class UserRestControllerTest {
         this.mockedStaticUserMapper
                 .when(() -> UserMapper.toNewUserDto(any(NewUserRequestDto.class)))
                 .thenReturn(mappedNewUserDto);
-        this.mockedStaticUserController
-                .when(() -> UserController.create(any(UserDataSourceJpa.class)))
-                .thenReturn(this.mockUserController);
         when(this.mockUserController.createUser(mappedNewUserDto))
                 .thenThrow(new BusinessException("Business rule violation"));
         this.mockedStaticHttpStatusResolver
@@ -169,9 +179,6 @@ class UserRestControllerTest {
     void shouldFindUserById() throws Exception {
         // Given
         final String expectedResponseBody = this.jsonReaderUtil.readJsonFromFile("new-user-response-body.json");
-        this.mockedStaticUserController
-                .when(() -> UserController.create(any(UserDataSourceJpa.class)))
-                .thenReturn(this.mockUserController);
         final UserOutputDto userOutputDto = this.userObjectMother
                 .createSampleUserOutputDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
                 .toBuilder()
@@ -199,9 +206,6 @@ class UserRestControllerTest {
         this.mockedStaticUserMapper
                 .when(() -> UserMapper.toUpdateUserDto(any(UpdateUserRequestDto.class)))
                 .thenReturn(mappedUpdateUserDto);
-        this.mockedStaticUserController
-                .when(() -> UserController.create(any(UserDataSourceJpa.class)))
-                .thenReturn(this.mockUserController);
         final UserOutputDto userOutputDto = this.userObjectMother
                 .createSampleUserOutputDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
                 .toBuilder()
@@ -225,12 +229,7 @@ class UserRestControllerTest {
     }
 
     @Test
-    void shouldDeleteByIdUser() throws Exception {
-        // Given
-        this.mockedStaticUserController
-                .when(() -> UserController.create(any(UserDataSourceJpa.class)))
-                .thenReturn(this.mockUserController);
-
+    void shouldDeleteUserById() throws Exception {
         //When & Then
         this.mockMvc
                 .perform(delete("/user/{id}", ID))
@@ -242,9 +241,6 @@ class UserRestControllerTest {
     void shouldLoginUser() throws Exception {
         // Given
         final String requestBody = this.jsonReaderUtil.readJsonFromFile("login-user-request-body.json");
-        this.mockedStaticUserController
-                .when(() -> UserController.create(any(UserDataSourceJpa.class)))
-                .thenReturn(this.mockUserController);
 
         //When & Then
         this.mockMvc
@@ -261,9 +257,6 @@ class UserRestControllerTest {
     void shouldChangeUserPassword() throws Exception {
         // Given
         final String requestBody = this.jsonReaderUtil.readJsonFromFile("change-user-password-request-body.json");
-        this.mockedStaticUserController
-                .when(() -> UserController.create(any(UserDataSourceJpa.class)))
-                .thenReturn(this.mockUserController);
 
         //When & Then
         this.mockMvc
@@ -277,18 +270,5 @@ class UserRestControllerTest {
                         requestBodyMap.get("login"),
                         requestBodyMap.get("oldPassword"),
                         requestBodyMap.get("newPassword"));
-    }
-
-    @AfterEach
-    void tearDown() {
-        if (this.mockedStaticHttpStatusResolver != null) {
-            this.mockedStaticHttpStatusResolver.close();
-        }
-        if (this.mockedStaticUserController != null) {
-            this.mockedStaticUserController.close();
-        }
-        if (this.mockedStaticUserMapper != null) {
-            this.mockedStaticUserMapper.close();
-        }
     }
 }

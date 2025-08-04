@@ -7,7 +7,10 @@ import java.util.UUID;
 
 public interface UserDataSource {
     UserDto save(UserDto userDto);
+
     Optional<UserDto> findById(UUID id);
+
     Optional<UserDto> findByLogin(String login);
+
     void deleteById(UUID id);
 }

@@ -6,5 +6,15 @@ CREATE TABLE IF NOT EXISTS users (
     login VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    last_update TIMESTAMP WITH TIME ZONE NOT NULL
+    last_updated TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS restaurants (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    business_hours JSONB NOT NULL,
+    owner_id UUID NOT NULL REFERENCES users(id),
+    last_updated TIMESTAMP WITH TIME ZONE NOT NULL
 );

@@ -16,28 +16,40 @@ public class UserObjectMother {
     public User createSampleUser(Map<String, Object> sampleData) {
         return User
                 .builder()
-                .id(UUID.randomUUID())
+                .id(
+                        sampleData.get("id") == null
+                                ? UUID.randomUUID()
+                                : UUID.fromString(sampleData.get("id").toString()))
                 .name(sampleData.get("name").toString())
                 .userType(UserType.fromValue(sampleData.get("userType").toString()))
                 .email(sampleData.get("email").toString())
                 .login(sampleData.get("login").toString())
                 .password(sampleData.get("password").toString())
                 .address(sampleData.get("address").toString())
-                .lastUpdated(LocalDateTime.now())
+                .lastUpdated(
+                        sampleData.get("lastUpdated") == null
+                                ? LocalDateTime.now()
+                                : LocalDateTime.parse(sampleData.get("lastUpdated").toString()))
                 .build();
     }
 
     public UserDto createSampleUserDto(Map<String, Object> sampleData) {
         return UserDto
                 .builder()
-                .id(UUID.randomUUID())
+                .id(
+                        sampleData.get("id") == null
+                                ? UUID.randomUUID()
+                                : UUID.fromString(sampleData.get("id").toString()))
                 .name(sampleData.get("name").toString())
                 .userType(sampleData.get("userType").toString())
                 .email(sampleData.get("email").toString())
                 .login(sampleData.get("login").toString())
                 .password(sampleData.get("password").toString())
                 .address(sampleData.get("address").toString())
-                .lastUpdated(LocalDateTime.now())
+                .lastUpdated(
+                        sampleData.get("lastUpdated") == null
+                                ? LocalDateTime.now()
+                                : LocalDateTime.parse(sampleData.get("lastUpdated").toString()))
                 .build();
     }
 
@@ -65,13 +77,19 @@ public class UserObjectMother {
     public UserOutputDto createSampleUserOutputDto(Map<String, Object> sampleData) {
         return UserOutputDto
                 .builder()
-                .id(UUID.randomUUID())
+                .id(
+                        sampleData.get("id") == null
+                                ? UUID.randomUUID()
+                                : UUID.fromString(sampleData.get("id").toString()))
                 .name(sampleData.get("name").toString())
                 .userType(sampleData.get("userType").toString())
                 .email(sampleData.get("email").toString())
                 .login(sampleData.get("login").toString())
                 .address(sampleData.get("address").toString())
-                .lastUpdated(LocalDateTime.now())
+                .lastUpdated(
+                        sampleData.get("lastUpdated") == null
+                                ? LocalDateTime.now()
+                                : LocalDateTime.parse(sampleData.get("lastUpdated").toString()))
                 .build();
     }
 }

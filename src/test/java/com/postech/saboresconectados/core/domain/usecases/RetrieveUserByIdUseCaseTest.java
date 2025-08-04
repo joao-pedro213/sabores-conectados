@@ -1,7 +1,7 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
 import com.postech.saboresconectados.core.domain.entities.User;
-import com.postech.saboresconectados.core.domain.exceptions.UserNotFoundException;
+import com.postech.saboresconectados.core.domain.exceptions.EntityNotFoundException;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.junit.jupiter.api.AfterEach;
@@ -46,6 +46,13 @@ class RetrieveUserByIdUseCaseTest {
         when(this.mockEmailValidator.isValid(any(String.class))).thenReturn(true);
     }
 
+    @AfterEach
+    void tearDown() {
+        if (this.mockedStaticEmailValidator != null) {
+            this.mockedStaticEmailValidator.close();
+        }
+    }
+
     @Test
     @DisplayName("Should find a User if it exists in the database")
     void shouldFindUserById() {
@@ -68,20 +75,13 @@ class RetrieveUserByIdUseCaseTest {
     }
 
     @Test
-    @DisplayName("should throw UserNotFoundException when the user is not found in the database")
-    void shouldThrowUserNotFoundException() {
+    @DisplayName("should throw EntityNotFoundException when the user is not found in the database")
+    void shouldThrowEntityNotFoundException() {
         // Given
         when(this.mockUserGateway.findById(ID)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> this.useCase.execute(ID)).isInstanceOf(UserNotFoundException.class);
+        assertThatThrownBy(() -> this.useCase.execute(ID)).isInstanceOf(EntityNotFoundException.class);
         verify(this.mockUserGateway, times(1)).findById(ID);
-    }
-
-    @AfterEach
-    void tearDown() {
-        if (this.mockedStaticEmailValidator != null) {
-            this.mockedStaticEmailValidator.close();
-        }
     }
 }

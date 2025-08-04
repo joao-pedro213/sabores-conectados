@@ -28,7 +28,7 @@ public class UserModel {
     @GeneratedValue
     private UUID id;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @Column(name = "type", nullable = false)
@@ -40,13 +40,13 @@ public class UserModel {
     @Column(nullable = false)
     private String login;
 
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "address", nullable = false)
+    @Column(nullable = false)
     private String address;
 
     @LastModifiedDate
-    @Column(name = "last_update", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime lastUpdated;
 }

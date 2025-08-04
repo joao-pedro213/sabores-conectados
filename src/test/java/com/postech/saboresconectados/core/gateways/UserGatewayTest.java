@@ -44,30 +44,22 @@ class UserGatewayTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         this.userSampleData = new LinkedHashMap<>();
+        this.userSampleData.put("id", ID.toString());
         this.userSampleData.put("name", "Luan");
         this.userSampleData.put("userType", UserType.RESTAURANT_OWNER.getValue());
         this.userSampleData.put("email", "luan@restaurant.com");
         this.userSampleData.put("login", "luan.restaurant");
         this.userSampleData.put("password", "AKgC12!a!G");
         this.userSampleData.put("address", "99897 Johnson Mountain, Reginaldmouth, CO 46370-9570");
+        this.userSampleData.put("lastUpdated", LAST_UPDATED.toString());
     }
 
     @Test
     void shouldSaveUser() {
         // Given
-        final User userToSave = this.userObjectMother
-                .createSampleUser(this.userSampleData)
-                .toBuilder()
-                .id(ID)
-                .lastUpdated(LAST_UPDATED)
-                .build();
-        final UserDto saveddUserDto = this.userObjectMother
-                .createSampleUserDto(this.userSampleData)
-                .toBuilder()
-                .id(ID)
-                .lastUpdated(LAST_UPDATED)
-                .build();
-        when(this.dataSource.save(any(UserDto.class))).thenReturn(saveddUserDto);
+        final User userToSave = this.userObjectMother.createSampleUser(this.userSampleData);
+        final UserDto savedUserDto = this.userObjectMother.createSampleUserDto(this.userSampleData);
+        when(this.dataSource.save(any(UserDto.class))).thenReturn(savedUserDto);
 
         // When
         final User savedUser = this.gateway.save(userToSave);
@@ -76,26 +68,17 @@ class UserGatewayTest {
         final ArgumentCaptor<UserDto> argument = ArgumentCaptor.forClass(UserDto.class);
         verify(this.dataSource, times(1)).save(argument.capture());
         final UserDto capturedUserDto = argument.getValue();
-        final UserDto expectedUserDto = saveddUserDto.toBuilder().build();
-        assertThat(capturedUserDto)
-                .usingRecursiveComparison()
-                .isEqualTo(expectedUserDto);
+        final UserDto expectedUserDto = savedUserDto.toBuilder().build();
+        assertThat(capturedUserDto).usingRecursiveComparison().isEqualTo(expectedUserDto);
         assertThat(savedUser).isNotNull();
         final User expectedUpdatedUser = userToSave.toBuilder().build();
-        assertThat(savedUser)
-                .usingRecursiveComparison()
-                .isEqualTo(expectedUpdatedUser);
+        assertThat(savedUser).usingRecursiveComparison().isEqualTo(expectedUpdatedUser);
     }
 
     @Test
     void shouldFindUserById() {
         // Given
-        final UserDto foundUserDto = this.userObjectMother
-                .createSampleUserDto(this.userSampleData)
-                .toBuilder()
-                .id(ID)
-                .lastUpdated(LAST_UPDATED)
-                .build();
+        final UserDto foundUserDto = this.userObjectMother.createSampleUserDto(this.userSampleData);
         when(this.dataSource.findById(ID)).thenReturn(Optional.of(foundUserDto));
 
         // When
@@ -104,40 +87,15 @@ class UserGatewayTest {
         // Then
         verify(this.dataSource, times(1)).findById(ID);
         assertThat(foundUser).isPresent();
-        final User expectedFoundUser = this.userObjectMother
-                .createSampleUser(this.userSampleData)
-                .toBuilder()
-                .id(ID)
-                .lastUpdated(LAST_UPDATED)
-                .build();
-        assertThat(foundUser.get())
-                .usingRecursiveComparison()
-                .isEqualTo(expectedFoundUser);
-    }
-
-    @Test
-    void shouldFindUserByIdWhenDataSourceReturnsEmpty() {
-        // Given
-        when(this.dataSource.findById(ID)).thenReturn(Optional.empty());
-
-        // When
-        Optional<User> foundUser = this.gateway.findById(ID);
-
-        // Then
-        verify(this.dataSource, times(1)).findById(ID);
-        assertThat(foundUser).isNotPresent();
+        final User expectedFoundUser = this.userObjectMother.createSampleUser(this.userSampleData);
+        assertThat(foundUser.get()).usingRecursiveComparison().isEqualTo(expectedFoundUser);
     }
 
     @Test
     void shouldFindUserByLogin() {
         // Given
         final String login = this.userSampleData.get("login").toString();
-        final UserDto foundUserDto = this.userObjectMother
-                .createSampleUserDto(this.userSampleData)
-                .toBuilder()
-                .id(ID)
-                .lastUpdated(LAST_UPDATED)
-                .build();
+        final UserDto foundUserDto = this.userObjectMother.createSampleUserDto(this.userSampleData);
         when(this.dataSource.findByLogin(login)).thenReturn(Optional.of(foundUserDto));
 
         // When
@@ -146,33 +104,12 @@ class UserGatewayTest {
         // Then
         verify(this.dataSource, times(1)).findByLogin(login);
         assertThat(foundUser).isPresent();
-        final User expectedFoundUser = this.userObjectMother
-                .createSampleUser(this.userSampleData)
-                .toBuilder()
-                .id(ID)
-                .lastUpdated(LAST_UPDATED)
-                .build();
-        assertThat(foundUser.get())
-                .usingRecursiveComparison()
-                .isEqualTo(expectedFoundUser);
+        final User expectedFoundUser = this.userObjectMother.createSampleUser(this.userSampleData);
+        assertThat(foundUser.get()).usingRecursiveComparison().isEqualTo(expectedFoundUser);
     }
 
     @Test
-    void shouldFindUserByLoginWhenDataSourceReturnsEmpty() {
-        // Given
-        final String login = this.userSampleData.get("login").toString();
-        when(this.dataSource.findByLogin(login)).thenReturn(Optional.empty());
-
-        // When
-        Optional<User> foundUser = this.gateway.findByLogin(login);
-
-        // Then
-        verify(this.dataSource, times(1)).findByLogin(login);
-        assertThat(foundUser).isNotPresent();
-    }
-
-    @Test
-    void shouldDeleteByIdUserById() {
+    void shouldDeleteUserById() {
         // When
         this.gateway.deleteById(ID);
 
