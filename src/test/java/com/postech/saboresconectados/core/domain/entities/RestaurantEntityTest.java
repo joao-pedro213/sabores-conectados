@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-class RestaurantTest {
+class RestaurantEntityTest {
     @Mock
     private EmailValidator mockEmailValidator;
 
@@ -47,14 +47,14 @@ class RestaurantTest {
     @DisplayName("should throw UserNotRestaurantOwnerException when user is not of type RESTAURANT_OWNER")
     void shouldThrowUserNotRestaurantOwnerException() {
         // Given
-        User user = User
+        UserEntity userEntity = UserEntity
                 .builder()
                 .userType(UserType.CUSTOMER)
                 .email(VALID_EMAIL)
                 .login(VALID_LOGIN)
                 .password(VALID_PASSWORD)
                 .build();
-        assertThatThrownBy(() -> Restaurant.builder().owner(user).build())
+        assertThatThrownBy(() -> RestaurantEntity.builder().owner(userEntity).build())
                 .isInstanceOf(UserNotRestaurantOwnerException.class);
     }
 }

@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.exceptions.InvalidLoginCredentialsException;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class LoginUserUseCaseTest {
+class LoginUserEntityUseCaseTest {
     @Mock
     private UserGateway mockUserGateway;
 
@@ -50,13 +50,13 @@ class LoginUserUseCaseTest {
     @DisplayName("should login a User if the it exists in the database and if the provided credentials are valid")
     void shouldLoginUser() {
         // Given
-        final User foundUser = User
+        final UserEntity foundUserEntity = UserEntity
                 .builder()
                 .email("test@domain.com")
                 .login(LOGIN)
                 .password(PASSWORD)
                 .build();
-        when(this.mockUserGateway.findByLogin(LOGIN)).thenReturn(Optional.of(foundUser));
+        when(this.mockUserGateway.findByLogin(LOGIN)).thenReturn(Optional.of(foundUserEntity));
 
         // When
         this.useCase.execute(LOGIN, PASSWORD);
@@ -80,13 +80,13 @@ class LoginUserUseCaseTest {
     @DisplayName("should throw InvalidLoginCredentialsException when the user is found in the database, but the provided credentials are invalid")
     void shouldThrowInvalidLoginCredentialsExceptionWhenUserCredentialsAreInvalid() {
         // Given
-        final User foundUser = User
+        final UserEntity foundUserEntity = UserEntity
                 .builder()
                 .email("test@domain.com")
                 .login(LOGIN)
                 .password("0th3rP4ss!")
                 .build();
-        when(this.mockUserGateway.findByLogin(LOGIN)).thenReturn(Optional.of(foundUser));
+        when(this.mockUserGateway.findByLogin(LOGIN)).thenReturn(Optional.of(foundUserEntity));
 
         // When & Then
         assertThatThrownBy(() -> this.useCase.execute(LOGIN, PASSWORD))

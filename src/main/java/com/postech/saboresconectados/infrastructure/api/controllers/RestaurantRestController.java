@@ -2,7 +2,7 @@ package com.postech.saboresconectados.infrastructure.api.controllers;
 
 import com.postech.saboresconectados.core.controller.RestaurantController;
 import com.postech.saboresconectados.core.dtos.NewRestaurantDto;
-import com.postech.saboresconectados.core.dtos.RestaurantOutputDto;
+import com.postech.saboresconectados.core.dtos.RestaurantDto;
 import com.postech.saboresconectados.core.dtos.UpdateRestaurantDto;
 import com.postech.saboresconectados.infrastructure.api.dtos.NewRestaurantRequestDto;
 import com.postech.saboresconectados.infrastructure.api.dtos.UpdateRestaurantRequestDto;
@@ -32,31 +32,31 @@ public class RestaurantRestController {
     private UserDataSourceJpa userDataSourceJpa;
 
     @PostMapping
-    public ResponseEntity<RestaurantOutputDto> create(@Valid @RequestBody NewRestaurantRequestDto requestDto) {
+    public ResponseEntity<RestaurantDto> create(@Valid @RequestBody NewRestaurantRequestDto requestDto) {
         NewRestaurantDto newRestaurantDto = RestaurantMapper.toNewRestaurantDto(requestDto);
         RestaurantController restaurantController = RestaurantController
                 .create(this.restaurantDataSourceJpa, this.userDataSourceJpa);
-        RestaurantOutputDto restaurantOutputDto = restaurantController.createRestaurant(newRestaurantDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantOutputDto);
+        RestaurantDto restaurantDto = restaurantController.createRestaurant(newRestaurantDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantOutputDto> retrieve(@PathVariable UUID id) {
+    public ResponseEntity<RestaurantDto> retrieve(@PathVariable UUID id) {
         RestaurantController restaurantController = RestaurantController
                 .create(this.restaurantDataSourceJpa, this.userDataSourceJpa);
-        RestaurantOutputDto restaurantOutputDto = restaurantController.retrieveRestaurantById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantOutputDto);
+        RestaurantDto restaurantDto = restaurantController.retrieveRestaurantById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RestaurantOutputDto> update(
+    public ResponseEntity<RestaurantDto> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateRestaurantRequestDto requestDto) {
         UpdateRestaurantDto updateRestaurantDto = RestaurantMapper.toUpdateRestaurantDto(requestDto);
         RestaurantController restaurantController = RestaurantController
                 .create(this.restaurantDataSourceJpa, this.userDataSourceJpa);
-        RestaurantOutputDto restaurantOutputDto = restaurantController.updateRestaurant(id, updateRestaurantDto);
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantOutputDto);
+        RestaurantDto restaurantDto = restaurantController.updateRestaurant(id, updateRestaurantDto);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantDto);
     }
 
     @DeleteMapping("/{id}")

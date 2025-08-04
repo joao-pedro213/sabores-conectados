@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-class UserTest {
+class UserEntityTest {
     @Mock
     private EmailValidator mockEmailValidator;
 
@@ -56,7 +56,7 @@ class UserTest {
             ""
     })
     void shouldRaiseExceptionWhenPasswordIsInvalid(String invalidPassword) {
-        assertThatThrownBy(() -> User
+        assertThatThrownBy(() -> UserEntity
                 .builder()
                 .email(VALID_EMAIL)
                 .login(VALID_LOGIN)
@@ -81,7 +81,7 @@ class UserTest {
             "user\tname", "user\nname", "usuário"
     })
     void shouldRaiseExceptionWhenLoginIsInvalid(String invalidLogin) {
-        assertThatThrownBy(() -> User
+        assertThatThrownBy(() -> UserEntity
                 .builder()
                 .email(VALID_EMAIL)
                 .login(invalidLogin)
@@ -96,7 +96,7 @@ class UserTest {
     @ValueSource(strings = {"invalid.@mail.com"})
     void shouldRaiseExceptionWhenEmailIsInvalid(String invalidEmail) {
         when(this.mockEmailValidator.isValid(any(String.class))).thenReturn(false);
-        assertThatThrownBy(() -> User
+        assertThatThrownBy(() -> UserEntity
                 .builder()
                 .email(invalidEmail)
                 .login(VALID_LOGIN)

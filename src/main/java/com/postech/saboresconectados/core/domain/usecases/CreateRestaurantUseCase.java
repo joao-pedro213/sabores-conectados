@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.Restaurant;
+import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
 import com.postech.saboresconectados.core.domain.exceptions.RestaurantAlreadyExistsException;
 import com.postech.saboresconectados.core.gateways.RestaurantGateway;
 import lombok.AllArgsConstructor;
@@ -15,11 +15,11 @@ public class CreateRestaurantUseCase {
         return new CreateRestaurantUseCase(restaurantGateway);
     }
 
-    public Restaurant execute(Restaurant restaurant) {
-        Optional<Restaurant> foundRestaurant = this.restaurantGateway.findByName(restaurant.getName());
+    public RestaurantEntity execute(RestaurantEntity restaurantEntity) {
+        Optional<RestaurantEntity> foundRestaurant = this.restaurantGateway.findByName(restaurantEntity.getName());
         if (foundRestaurant.isPresent()) {
             throw new RestaurantAlreadyExistsException();
         }
-        return this.restaurantGateway.save(restaurant);
+        return this.restaurantGateway.save(restaurantEntity);
     }
 }

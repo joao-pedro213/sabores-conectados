@@ -5,7 +5,7 @@ import com.postech.saboresconectados.core.controller.UserController;
 import com.postech.saboresconectados.core.domain.exceptions.BusinessException;
 import com.postech.saboresconectados.core.dtos.NewUserDto;
 import com.postech.saboresconectados.core.dtos.UpdateUserDto;
-import com.postech.saboresconectados.core.dtos.UserOutputDto;
+import com.postech.saboresconectados.core.dtos.UserDto;
 import com.postech.saboresconectados.helpers.JsonReaderUtil;
 import com.postech.saboresconectados.helpers.UserObjectMother;
 import com.postech.saboresconectados.infrastructure.api.config.SecurityConfig;
@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import(SecurityConfig.class)
 @WebMvcTest(UserRestController.class)
-class UserRestControllerTest {
+class UserEntityRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -106,13 +106,13 @@ class UserRestControllerTest {
         this.mockedStaticUserMapper
                 .when(() -> UserMapper.toNewUserDto(any(NewUserRequestDto.class)))
                 .thenReturn(mappedNewUserDto);
-        final UserOutputDto userOutputDto = this.userObjectMother
-                .createSampleUserOutputDto(this.objectMapper.readValue(requestBody, LinkedHashMap.class))
+        final UserDto userDto = this.userObjectMother
+                .createSampleUserDto(this.objectMapper.readValue(requestBody, LinkedHashMap.class))
                 .toBuilder()
                 .id(UUID.fromString(ID))
                 .lastUpdated(LocalDateTime.parse(LAST_UPDATED))
                 .build();
-        when(this.mockUserController.createUser(mappedNewUserDto)).thenReturn(userOutputDto);
+        when(this.mockUserController.createUser(mappedNewUserDto)).thenReturn(userDto);
 
         //When & Then
         final MvcResult mvcResult = this.mockMvc
@@ -179,13 +179,13 @@ class UserRestControllerTest {
     void shouldFindUserById() throws Exception {
         // Given
         final String expectedResponseBody = this.jsonReaderUtil.readJsonFromFile("new-user-response-body.json");
-        final UserOutputDto userOutputDto = this.userObjectMother
-                .createSampleUserOutputDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
+        final UserDto userDto = this.userObjectMother
+                .createSampleUserDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
                 .toBuilder()
                 .id(UUID.fromString(ID))
                 .lastUpdated(LocalDateTime.parse(LAST_UPDATED))
                 .build();
-        when(this.mockUserController.retrieveUserById(UUID.fromString(ID))).thenReturn(userOutputDto);
+        when(this.mockUserController.retrieveUserById(UUID.fromString(ID))).thenReturn(userDto);
 
         //When & Then
         final MvcResult mvcResult = this.mockMvc
@@ -206,13 +206,13 @@ class UserRestControllerTest {
         this.mockedStaticUserMapper
                 .when(() -> UserMapper.toUpdateUserDto(any(UpdateUserRequestDto.class)))
                 .thenReturn(mappedUpdateUserDto);
-        final UserOutputDto userOutputDto = this.userObjectMother
-                .createSampleUserOutputDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
+        final UserDto userDto = this.userObjectMother
+                .createSampleUserDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
                 .toBuilder()
                 .id(UUID.fromString(ID))
                 .lastUpdated(LocalDateTime.parse(LAST_UPDATED))
                 .build();
-        when(this.mockUserController.updateUser(UUID.fromString(ID), mappedUpdateUserDto)).thenReturn(userOutputDto);
+        when(this.mockUserController.updateUser(UUID.fromString(ID), mappedUpdateUserDto)).thenReturn(userDto);
 
         //When & Then
         final MvcResult mvcResult = this.mockMvc

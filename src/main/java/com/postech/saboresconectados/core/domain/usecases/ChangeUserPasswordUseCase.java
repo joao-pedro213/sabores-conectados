@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.exceptions.InvalidLoginCredentialsException;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ public class ChangeUserPasswordUseCase {
     }
 
     public void execute(String login, String oldPassword, String newPassword) {
-        Optional<User> foundUser = this.userGateway.findByLogin(login);
+        Optional<UserEntity> foundUser = this.userGateway.findByLogin(login);
         if (foundUser.isEmpty() || !foundUser.get().getPassword().equals(oldPassword)) {
             throw new InvalidLoginCredentialsException();
         }

@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.exceptions.EntityAlreadyExistsException;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import lombok.AllArgsConstructor;
@@ -15,11 +15,11 @@ public class CreateUserUseCase {
         return new CreateUserUseCase(userGateway);
     }
 
-    public User execute(User user) {
-        Optional<User> foundUser = this.userGateway.findByLogin(user.getLogin());
+    public UserEntity execute(UserEntity userEntity) {
+        Optional<UserEntity> foundUser = this.userGateway.findByLogin(userEntity.getLogin());
         if (foundUser.isPresent()) {
             throw new EntityAlreadyExistsException("User");
         }
-        return this.userGateway.save(user);
+        return this.userGateway.save(userEntity);
     }
 }

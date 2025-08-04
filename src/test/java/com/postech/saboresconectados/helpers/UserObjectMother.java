@@ -1,11 +1,10 @@
 package com.postech.saboresconectados.helpers;
 
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.dtos.NewUserDto;
 import com.postech.saboresconectados.core.dtos.UpdateUserDto;
 import com.postech.saboresconectados.core.dtos.UserDto;
-import com.postech.saboresconectados.core.dtos.UserOutputDto;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -13,8 +12,8 @@ import java.util.UUID;
 
 public class UserObjectMother {
 
-    public User createSampleUser(Map<String, Object> sampleData) {
-        return User
+    public UserEntity createSampleUser(Map<String, Object> sampleData) {
+        return UserEntity
                 .builder()
                 .id(
                         sampleData.get("id") == null
@@ -71,25 +70,6 @@ public class UserObjectMother {
                 .name(sampleData.get("name").toString())
                 .email(sampleData.get("email").toString())
                 .address(sampleData.get("address").toString())
-                .build();
-    }
-
-    public UserOutputDto createSampleUserOutputDto(Map<String, Object> sampleData) {
-        return UserOutputDto
-                .builder()
-                .id(
-                        sampleData.get("id") == null
-                                ? UUID.randomUUID()
-                                : UUID.fromString(sampleData.get("id").toString()))
-                .name(sampleData.get("name").toString())
-                .userType(sampleData.get("userType").toString())
-                .email(sampleData.get("email").toString())
-                .login(sampleData.get("login").toString())
-                .address(sampleData.get("address").toString())
-                .lastUpdated(
-                        sampleData.get("lastUpdated") == null
-                                ? LocalDateTime.now()
-                                : LocalDateTime.parse(sampleData.get("lastUpdated").toString()))
                 .build();
     }
 }
