@@ -1,8 +1,8 @@
 package com.postech.saboresconectados.core.gateways;
 
-import com.postech.saboresconectados.core.domain.entities.DailySchedule;
-import com.postech.saboresconectados.core.domain.entities.Restaurant;
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.valueobjects.DailySchedule;
+import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.CuisineType;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.dtos.DailyScheduleDto;
@@ -25,18 +25,18 @@ public class RestaurantGateway {
         return new RestaurantGateway(dataSource);
     }
 
-    public Restaurant save(Restaurant restaurant) {
-        RestaurantDto restaurantToSave = this.toDto(restaurant);
+    public RestaurantEntity save(RestaurantEntity restaurantEntity) {
+        RestaurantDto restaurantToSave = this.toDto(restaurantEntity);
         RestaurantDto savedRestaurant = this.dataSource.save(restaurantToSave);
         return this.toDomain(savedRestaurant);
     }
 
-    public Optional<Restaurant> findById(UUID id) {
+    public Optional<RestaurantEntity> findById(UUID id) {
         Optional<RestaurantDto> foundRestaurant = this.dataSource.findById(id);
         return foundRestaurant.map(this::toDomain);
     }
 
-    public Optional<Restaurant> findByName(String name) {
+    public Optional<RestaurantEntity> findByName(String name) {
         Optional<RestaurantDto> foundRestaurant = this.dataSource.findByName(name);
         return foundRestaurant.map(this::toDomain);
     }
@@ -45,9 +45,9 @@ public class RestaurantGateway {
         this.dataSource.deleteById(id);
     }
 
-    private RestaurantDto toDto(Restaurant restaurant) {
+    private RestaurantDto toDto(RestaurantEntity restaurantEntity) {
         Map<DayOfWeek, DailyScheduleDto> businessHours = new LinkedHashMap<>();
-        restaurant
+        restaurantEntity
                 .getBusinessHours()
                 .forEach(((dayOfWeek, dailySchedule) ->
                         businessHours.put(
@@ -59,31 +59,31 @@ public class RestaurantGateway {
                                         .build())));
         return RestaurantDto
                 .builder()
-                .id(restaurant.getId())
-                .name(restaurant.getName())
-                .address(restaurant.getAddress())
-                .cuisineType(restaurant.getCuisineType().getValue())
+                .id(restaurantEntity.getId())
+                .name(restaurantEntity.getName())
+                .address(restaurantEntity.getAddress())
+                .cuisineType(restaurantEntity.getCuisineType().getValue())
                 .businessHours(businessHours)
-                .owner(this.toUserDto(restaurant.getOwner()))
-                .lastUpdated(restaurant.getLastUpdated())
+                .owner(this.toUserDto(restaurantEntity.getOwner()))
+                .lastUpdated(restaurantEntity.getLastUpdated())
                 .build();
     }
 
-    private UserDto toUserDto(User user) {
+    private UserDto toUserDto(UserEntity userEntity) {
         return UserDto
                 .builder()
-                .id(user.getId())
-                .name(user.getName())
-                .userType(user.getUserType().getValue())
-                .email(user.getEmail())
-                .login(user.getLogin())
-                .password(user.getPassword())
-                .address(user.getAddress())
-                .lastUpdated(user.getLastUpdated())
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .userType(userEntity.getUserType().getValue())
+                .email(userEntity.getEmail())
+                .login(userEntity.getLogin())
+                .password(userEntity.getPassword())
+                .address(userEntity.getAddress())
+                .lastUpdated(userEntity.getLastUpdated())
                 .build();
     }
 
-    private Restaurant toDomain(RestaurantDto restaurantDto) {
+    private RestaurantEntity toDomain(RestaurantDto restaurantDto) {
         Map<DayOfWeek, DailySchedule> businessHours = new LinkedHashMap<>();
         restaurantDto
                 .getBusinessHours()
@@ -95,7 +95,7 @@ public class RestaurantGateway {
                                         .openingTime(dailySchedule.getOpeningTime())
                                         .closingTime(dailySchedule.getClosingTime())
                                         .build())));
-        return Restaurant
+        return RestaurantEntity
                 .builder()
                 .id(restaurantDto.getId())
                 .name(restaurantDto.getName())
@@ -107,8 +107,8 @@ public class RestaurantGateway {
                 .build();
     }
 
-    private User toUser(UserDto userDto) {
-        return User
+    private UserEntity toUser(UserDto userDto) {
+        return UserEntity
                 .builder()
                 .id(userDto.getId())
                 .name(userDto.getName())

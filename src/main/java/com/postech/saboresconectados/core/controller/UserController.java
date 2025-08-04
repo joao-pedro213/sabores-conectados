@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.controller;
 
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.domain.usecases.ChangeUserPasswordUseCase;
 import com.postech.saboresconectados.core.domain.usecases.CreateUserUseCase;
@@ -10,7 +10,7 @@ import com.postech.saboresconectados.core.domain.usecases.RetrieveUserByIdUseCas
 import com.postech.saboresconectados.core.domain.usecases.UpdateUserUseCase;
 import com.postech.saboresconectados.core.dtos.NewUserDto;
 import com.postech.saboresconectados.core.dtos.UpdateUserDto;
-import com.postech.saboresconectados.core.dtos.UserOutputDto;
+import com.postech.saboresconectados.core.dtos.UserDto;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import com.postech.saboresconectados.core.interfaces.UserDataSource;
 import com.postech.saboresconectados.core.presenters.UserPresenter;
@@ -26,33 +26,33 @@ public class UserController {
         return new UserController(userDataSource);
     }
 
-    public UserOutputDto createUser(NewUserDto newUserDto) {
+    public UserDto createUser(NewUserDto newUserDto) {
         UserGateway userGateway = UserGateway.create(this.userDataSource);
         CreateUserUseCase useCase = CreateUserUseCase.create(userGateway);
-        User newUser = useCase.execute(this.toDomain(newUserDto));
+        UserEntity newUserEntity = useCase.execute(this.toDomain(newUserDto));
         UserPresenter presenter = UserPresenter.create();
-        return presenter.toDto(newUser);
+        return presenter.toDto(newUserEntity);
     }
 
-    public UserOutputDto retrieveUserById(UUID id) {
+    public UserDto retrieveUserById(UUID id) {
         UserGateway userGateway = UserGateway.create(this.userDataSource);
         RetrieveUserByIdUseCase useCase = RetrieveUserByIdUseCase.create(userGateway);
-        User foundUser = useCase.execute(id);
+        UserEntity foundUserEntity = useCase.execute(id);
         UserPresenter presenter = UserPresenter.create();
-        return presenter.toDto(foundUser);
+        return presenter.toDto(foundUserEntity);
     }
 
-    public UserOutputDto updateUser(UUID id, UpdateUserDto updateUserDto) {
+    public UserDto updateUser(UUID id, UpdateUserDto updateUserDto) {
         UserGateway userGateway = UserGateway.create(this.userDataSource);
         UpdateUserUseCase useCase = UpdateUserUseCase.create(userGateway);
-        User updatedUser = useCase
+        UserEntity updatedUserEntity = useCase
                 .execute(
                         id,
                         updateUserDto.getName(),
                         updateUserDto.getEmail(),
                         updateUserDto.getAddress());
         UserPresenter presenter = UserPresenter.create();
-        return presenter.toDto(updatedUser);
+        return presenter.toDto(updatedUserEntity);
     }
 
     public void deleteUserById(UUID id) {
@@ -73,8 +73,8 @@ public class UserController {
         useCase.execute(login, oldPassword, newPassword);
     }
 
-    private User toDomain(NewUserDto newUserDto) {
-        return User
+    private UserEntity toDomain(NewUserDto newUserDto) {
+        return UserEntity
                 .builder()
                 .name(newUserDto.getName())
                 .userType(UserType.fromValue(newUserDto.getUserType()))

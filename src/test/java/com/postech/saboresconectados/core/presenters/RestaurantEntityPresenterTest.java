@@ -1,8 +1,8 @@
 package com.postech.saboresconectados.core.presenters;
 
-import com.postech.saboresconectados.core.domain.entities.Restaurant;
+import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
-import com.postech.saboresconectados.core.dtos.RestaurantOutputDto;
+import com.postech.saboresconectados.core.dtos.RestaurantDto;
 import com.postech.saboresconectados.helpers.RestaurantObjectMother;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RestaurantPresenterTest {
+class RestaurantEntityPresenterTest {
 
     private RestaurantPresenter presenter;
 
@@ -75,15 +75,15 @@ class RestaurantPresenterTest {
     @Test
     void shouldMapDomainToDto() {
         // Given
-        final Restaurant restaurant = this.restaurantObjectMother.createSampleRestaurant(this.restaurantSampleData);
+        final RestaurantEntity restaurantEntity = this.restaurantObjectMother.createSampleRestaurant(this.restaurantSampleData);
 
         // When
-        final RestaurantOutputDto restaurantOutputDto = this.presenter.toDto(restaurant);
+        final RestaurantDto restaurantDto = this.presenter.toDto(restaurantEntity);
 
         // Then
-        final RestaurantOutputDto expectedRestaurantOutputDto = this.restaurantObjectMother
-                .createSampleRestaurantOutputDto(this.restaurantSampleData);
-        assertThat(restaurantOutputDto).usingRecursiveComparison().isEqualTo(expectedRestaurantOutputDto);
+        final RestaurantDto expectedRestaurantDto = this.restaurantObjectMother
+                .createSampleRestaurantDto(this.restaurantSampleData);
+        assertThat(restaurantDto).usingRecursiveComparison().isEqualTo(expectedRestaurantDto);
 
     }
 }

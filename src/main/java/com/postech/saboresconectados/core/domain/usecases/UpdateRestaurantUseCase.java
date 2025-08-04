@@ -1,7 +1,7 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.DailySchedule;
-import com.postech.saboresconectados.core.domain.entities.Restaurant;
+import com.postech.saboresconectados.core.valueobjects.DailySchedule;
+import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
 import com.postech.saboresconectados.core.domain.exceptions.EntityNotFoundException;
 import com.postech.saboresconectados.core.gateways.RestaurantGateway;
 import lombok.AllArgsConstructor;
@@ -18,15 +18,15 @@ public class UpdateRestaurantUseCase {
         return new UpdateRestaurantUseCase(restaurantGateway);
     }
 
-    public Restaurant execute(UUID id, String address, Map<DayOfWeek, DailySchedule> businessHours) {
-        Restaurant foundRestaurant = this.restaurantGateway
+    public RestaurantEntity execute(UUID id, String address, Map<DayOfWeek, DailySchedule> businessHours) {
+        RestaurantEntity foundRestaurantEntity = this.restaurantGateway
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Restaurant"));
-        Restaurant restaurantWithUpdates = foundRestaurant
+        RestaurantEntity restaurantEntityWithUpdates = foundRestaurantEntity
                 .toBuilder()
                 .address(address)
                 .businessHours(businessHours)
                 .build();
-        return this.restaurantGateway.save(restaurantWithUpdates);
+        return this.restaurantGateway.save(restaurantEntityWithUpdates);
     }
 }

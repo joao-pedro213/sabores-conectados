@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.exceptions.EntityNotFoundException;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class RetrieveUserByIdUseCaseTest {
+class RetrieveUserEntityByIdUseCaseTest {
     @Mock
     private UserGateway mockUserGateway;
 
@@ -57,20 +57,20 @@ class RetrieveUserByIdUseCaseTest {
     @DisplayName("Should find a User if it exists in the database")
     void shouldFindUserById() {
         // Given
-        final User foundUser = User
+        final UserEntity foundUserEntity = UserEntity
                 .builder()
                 .id(ID)
                 .email("test_user@example.com")
                 .login("test_user")
                 .password("Kdfv#a41")
                 .build();
-        when(this.mockUserGateway.findById(ID)).thenReturn(Optional.of(foundUser));
+        when(this.mockUserGateway.findById(ID)).thenReturn(Optional.of(foundUserEntity));
 
         // When
-        final User user = this.useCase.execute(ID);
+        final UserEntity userEntity = this.useCase.execute(ID);
 
         // Then
-        assertThat(user).isNotNull().isEqualTo(foundUser);
+        assertThat(userEntity).isNotNull().isEqualTo(foundUserEntity);
         verify(this.mockUserGateway, times(1)).findById(ID);
     }
 

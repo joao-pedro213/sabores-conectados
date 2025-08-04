@@ -1,9 +1,8 @@
 package com.postech.saboresconectados.core.presenters;
 
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.dtos.UserDto;
-import com.postech.saboresconectados.core.dtos.UserOutputDto;
 import com.postech.saboresconectados.helpers.UserObjectMother;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserPresenterTest {
+class UserEntityPresenterTest {
     private UserPresenter presenter;
 
     private final UserObjectMother userObjectMother = new UserObjectMother();
@@ -39,14 +38,14 @@ class UserPresenterTest {
         // Given
         final UUID id = UUID.randomUUID();
         final LocalDateTime lastUpdated = LocalDateTime.now();
-        final User user = this.userObjectMother.createSampleUser(this.userSampleData)
+        final UserEntity userEntity = this.userObjectMother.createSampleUser(this.userSampleData)
                 .toBuilder()
                 .id(id)
                 .lastUpdated(lastUpdated)
                 .build();
 
         // When
-        final UserOutputDto userOutputDto = this.presenter.toDto(user);
+        final UserDto userDto = this.presenter.toDto(userEntity);
 
         // Then
         final UserDto expectedUserDto = this.userObjectMother.createSampleUserDto(this.userSampleData)
@@ -54,9 +53,7 @@ class UserPresenterTest {
                 .id(id)
                 .lastUpdated(lastUpdated)
                 .build();
-        assertThat(userOutputDto)
-                .usingRecursiveComparison()
-                .isEqualTo(expectedUserDto);
+        assertThat(userDto).usingRecursiveComparison().isEqualTo(expectedUserDto);
 
     }
 }

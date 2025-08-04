@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.exceptions.EntityAlreadyExistsException;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class CreateUserUseCaseTest {
+class CreateUserEntityUseCaseTest {
     @Mock
     private UserGateway mockUserGateway;
 
@@ -47,41 +47,41 @@ class CreateUserUseCaseTest {
     @DisplayName("Should create a new User if it doesn't exist in the database yet")
     void shouldCreateUser() {
         // Given
-        final User newUser = User
+        final UserEntity newUserEntity = UserEntity
                 .builder()
                 .email("test_user@example.com")
                 .login("test_user")
                 .password("Str0ngPwd@62")
                 .build();
-        final User createdUser = newUser.toBuilder().build();
-        when(this.mockUserGateway.findByLogin(newUser.getLogin())).thenReturn(Optional.empty());
-        when(this.mockUserGateway.save(newUser)).thenReturn(createdUser);
+        final UserEntity createdUserEntity = newUserEntity.toBuilder().build();
+        when(this.mockUserGateway.findByLogin(newUserEntity.getLogin())).thenReturn(Optional.empty());
+        when(this.mockUserGateway.save(newUserEntity)).thenReturn(createdUserEntity);
 
         // When
-        final User user = this.useCase.execute(newUser);
+        final UserEntity userEntity = this.useCase.execute(newUserEntity);
 
         // Then
-        assertThat(user).isNotNull().isEqualTo(createdUser);
-        verify(this.mockUserGateway, times(1)).findByLogin(newUser.getLogin());
-        verify(this.mockUserGateway, times(1)).save(newUser);
+        assertThat(userEntity).isNotNull().isEqualTo(createdUserEntity);
+        verify(this.mockUserGateway, times(1)).findByLogin(newUserEntity.getLogin());
+        verify(this.mockUserGateway, times(1)).save(newUserEntity);
     }
 
     @Test
     @DisplayName("should throw a EntityAlreadyExistsException when the new user is found in the database before its creation")
     void shouldThrowUserAlreadyExist() {
         // Given
-        final User newUser = User
+        final UserEntity newUserEntity = UserEntity
                 .builder()
                 .email("test_user@example.com")
                 .login("test_user")
                 .password("Str0ngPwd@62")
                 .build();
-        when(this.mockUserGateway.findByLogin(newUser.getLogin())).thenReturn(Optional.of(newUser));
+        when(this.mockUserGateway.findByLogin(newUserEntity.getLogin())).thenReturn(Optional.of(newUserEntity));
 
         // When & Then
-        assertThatThrownBy(() -> this.useCase.execute(newUser)).isInstanceOf(EntityAlreadyExistsException.class);
-        verify(this.mockUserGateway, times(1)).findByLogin(newUser.getLogin());
-        verify(this.mockUserGateway, times(0)).save(newUser);
+        assertThatThrownBy(() -> this.useCase.execute(newUserEntity)).isInstanceOf(EntityAlreadyExistsException.class);
+        verify(this.mockUserGateway, times(1)).findByLogin(newUserEntity.getLogin());
+        verify(this.mockUserGateway, times(0)).save(newUserEntity);
     }
 
     @AfterEach

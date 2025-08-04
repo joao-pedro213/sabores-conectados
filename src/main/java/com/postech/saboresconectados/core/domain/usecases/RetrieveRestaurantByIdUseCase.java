@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.Restaurant;
+import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
 import com.postech.saboresconectados.core.domain.exceptions.EntityNotFoundException;
 import com.postech.saboresconectados.core.gateways.RestaurantGateway;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ public class RetrieveRestaurantByIdUseCase {
         return new RetrieveRestaurantByIdUseCase(restaurantGateway);
     }
 
-    public Restaurant execute(UUID id) {
+    public RestaurantEntity execute(UUID id) {
         return this.restaurantGateway.findById(id).orElseThrow(() -> new EntityNotFoundException("Restaurant"));
     }
 }

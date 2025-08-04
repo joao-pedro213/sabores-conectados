@@ -3,7 +3,7 @@ package com.postech.saboresconectados.infrastructure.api.controllers;
 import com.postech.saboresconectados.core.controller.UserController;
 import com.postech.saboresconectados.core.dtos.NewUserDto;
 import com.postech.saboresconectados.core.dtos.UpdateUserDto;
-import com.postech.saboresconectados.core.dtos.UserOutputDto;
+import com.postech.saboresconectados.core.dtos.UserDto;
 import com.postech.saboresconectados.infrastructure.api.dtos.ChangeUserPasswordRequestDto;
 import com.postech.saboresconectados.infrastructure.api.dtos.LoginUserRequestDto;
 import com.postech.saboresconectados.infrastructure.api.dtos.NewUserRequestDto;
@@ -32,28 +32,28 @@ public class UserRestController {
     private UserDataSourceJpa userDataSourceJpa;
 
     @PostMapping
-    public ResponseEntity<UserOutputDto> create(@Valid @RequestBody NewUserRequestDto requestDto) {
+    public ResponseEntity<UserDto> create(@Valid @RequestBody NewUserRequestDto requestDto) {
         NewUserDto newUserDto = UserMapper.toNewUserDto(requestDto);
         UserController userController = UserController.create(this.userDataSourceJpa);
-        UserOutputDto userOutputDto = userController.createUser(newUserDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userOutputDto);
+        UserDto userDto = userController.createUser(newUserDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserOutputDto> retrieve(@PathVariable UUID id) {
+    public ResponseEntity<UserDto> retrieve(@PathVariable UUID id) {
         UserController userController = UserController.create(this.userDataSourceJpa);
-        UserOutputDto userOutputDto = userController.retrieveUserById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(userOutputDto);
+        UserDto userDto = userController.retrieveUserById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserOutputDto> update(
+    public ResponseEntity<UserDto> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateUserRequestDto requestDto) {
         UpdateUserDto updateUserDto = UserMapper.toUpdateUserDto(requestDto);
         UserController userController = UserController.create(this.userDataSourceJpa);
-        UserOutputDto userOutputDto = userController.updateUser(id, updateUserDto);
-        return ResponseEntity.status(HttpStatus.OK).body(userOutputDto);
+        UserDto userDto = userController.updateUser(id, updateUserDto);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @DeleteMapping("/{id}")
