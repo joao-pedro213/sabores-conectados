@@ -3,7 +3,7 @@ package com.postech.saboresconectados.infrastructure.api.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postech.saboresconectados.core.controller.RestaurantController;
 import com.postech.saboresconectados.core.dtos.NewRestaurantDto;
-import com.postech.saboresconectados.core.dtos.RestaurantOutputDto;
+import com.postech.saboresconectados.core.dtos.RestaurantDto;
 import com.postech.saboresconectados.core.dtos.UpdateRestaurantDto;
 import com.postech.saboresconectados.helpers.JsonReaderUtil;
 import com.postech.saboresconectados.helpers.RestaurantObjectMother;
@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import(SecurityConfig.class)
 @WebMvcTest(RestaurantRestController.class)
-class RestaurantRestControllerTest {
+class RestaurantEntityRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -109,13 +109,13 @@ class RestaurantRestControllerTest {
         this.mockedStaticRestaurantMapper
                 .when(() -> RestaurantMapper.toNewRestaurantDto(any(NewRestaurantRequestDto.class)))
                 .thenReturn(mappedNewRestaurantDto);
-        final RestaurantOutputDto restaurantOutputDto = this.restaurantObjectMother
-                .createSampleRestaurantOutputDto(this.objectMapper.readValue(requestBody, TreeMap.class))
+        final RestaurantDto restaurantDto = this.restaurantObjectMother
+                .createSampleRestaurantDto(this.objectMapper.readValue(requestBody, TreeMap.class))
                 .toBuilder()
                 .id(UUID.fromString(RESTAURANT_ID))
                 .lastUpdated(LocalDateTime.parse(RESTAURANT_LAST_UPDATED))
                 .build();
-        when(this.mockRestaurantController.createRestaurant(mappedNewRestaurantDto)).thenReturn(restaurantOutputDto);
+        when(this.mockRestaurantController.createRestaurant(mappedNewRestaurantDto)).thenReturn(restaurantDto);
 
         //When & Then
         final MvcResult mvcResult = this.mockMvc
@@ -135,14 +135,14 @@ class RestaurantRestControllerTest {
         // Given
         final String expectedResponseBody = this.jsonReaderUtil
                 .readJsonFromFile("new-restaurant-response-body.json");
-        final RestaurantOutputDto restaurantOutputDto = this.restaurantObjectMother
-                .createSampleRestaurantOutputDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
+        final RestaurantDto restaurantDto = this.restaurantObjectMother
+                .createSampleRestaurantDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
                 .toBuilder()
                 .id(UUID.fromString(RESTAURANT_ID))
                 .lastUpdated(LocalDateTime.parse(RESTAURANT_LAST_UPDATED))
                 .build();
         when(this.mockRestaurantController.retrieveRestaurantById(UUID.fromString(RESTAURANT_ID)))
-                .thenReturn(restaurantOutputDto);
+                .thenReturn(restaurantDto);
 
         //When & Then
         final MvcResult mvcResult = this.mockMvc
@@ -164,14 +164,14 @@ class RestaurantRestControllerTest {
         this.mockedStaticRestaurantMapper
                 .when(() -> RestaurantMapper.toUpdateRestaurantDto(any(UpdateRestaurantRequestDto.class)))
                 .thenReturn(mappedUpdateRestaurantDto);
-        final RestaurantOutputDto restaurantOutputDto = this.restaurantObjectMother
-                .createSampleRestaurantOutputDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
+        final RestaurantDto restaurantDto = this.restaurantObjectMother
+                .createSampleRestaurantDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
                 .toBuilder()
                 .id(UUID.fromString(RESTAURANT_ID))
                 .lastUpdated(LocalDateTime.parse(RESTAURANT_LAST_UPDATED))
                 .build();
         when(this.mockRestaurantController.updateRestaurant(UUID.fromString(RESTAURANT_ID), mappedUpdateRestaurantDto))
-                .thenReturn(restaurantOutputDto);
+                .thenReturn(restaurantDto);
 
         //When & Then
         final MvcResult mvcResult = this.mockMvc

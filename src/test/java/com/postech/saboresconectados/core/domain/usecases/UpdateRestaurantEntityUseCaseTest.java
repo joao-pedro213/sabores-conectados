@@ -1,7 +1,7 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.DailySchedule;
-import com.postech.saboresconectados.core.domain.entities.Restaurant;
+import com.postech.saboresconectados.core.valueobjects.DailySchedule;
+import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.domain.exceptions.EntityNotFoundException;
 import com.postech.saboresconectados.core.gateways.RestaurantGateway;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class UpdateRestaurantUseCaseTest {
+class UpdateRestaurantEntityUseCaseTest {
     @Mock
     private RestaurantGateway mockRestaurantGateway;
 
@@ -116,44 +116,44 @@ class UpdateRestaurantUseCaseTest {
                         .openingTime(LocalTime.parse("11:00"))
                         .closingTime(LocalTime.parse("23:00"))
                         .build());
-        final Restaurant restaurantWithUpdates = Restaurant
+        final RestaurantEntity restaurantEntityWithUpdates = RestaurantEntity
                 .builder()
                 .address(RESTAURANT_NEW_ADDRESS)
                 .businessHours(newBusinessHours)
                 .owner(this.userObjectMother.createSampleUser(getOwnerSampleData()))
                 .lastUpdated(LocalDateTime.now().minusHours(3))
                 .build();
-        final Restaurant foundRestaurant = this.restaurantObjectMother
+        final RestaurantEntity foundRestaurantEntity = this.restaurantObjectMother
                 .createSampleRestaurant(this.restaurantSampleData);
         when(this.mockRestaurantGateway
                 .findById(UUID.fromString(RESTAURANT_ID)))
-                .thenReturn(Optional.of(foundRestaurant));
-        final Restaurant updatedRestaurant = restaurantWithUpdates.toBuilder().build();
-        when(this.mockRestaurantGateway.save(any(Restaurant.class))).thenReturn(updatedRestaurant);
+                .thenReturn(Optional.of(foundRestaurantEntity));
+        final RestaurantEntity updatedRestaurantEntity = restaurantEntityWithUpdates.toBuilder().build();
+        when(this.mockRestaurantGateway.save(any(RestaurantEntity.class))).thenReturn(updatedRestaurantEntity);
 
         // When
-        final Restaurant restaurant = this.useCase
+        final RestaurantEntity restaurantEntity = this.useCase
                 .execute(UUID.fromString(RESTAURANT_ID), RESTAURANT_NEW_ADDRESS, newBusinessHours);
 
         // Then
-        assertThat(restaurant).isNotNull().isEqualTo(updatedRestaurant);
+        assertThat(restaurantEntity).isNotNull().isEqualTo(updatedRestaurantEntity);
         verify(this.mockRestaurantGateway, times(1)).findById(UUID.fromString(RESTAURANT_ID));
-        final ArgumentCaptor<Restaurant> argument = ArgumentCaptor.forClass(Restaurant.class);
+        final ArgumentCaptor<RestaurantEntity> argument = ArgumentCaptor.forClass(RestaurantEntity.class);
         verify(this.mockRestaurantGateway, times(1)).save(argument.capture());
-        final Restaurant capturedRestaurant = argument.getValue();
-        final Restaurant expectedRestaurant = foundRestaurant
+        final RestaurantEntity capturedRestaurantEntity = argument.getValue();
+        final RestaurantEntity expectedRestaurantEntity = foundRestaurantEntity
                 .toBuilder()
                 .address(RESTAURANT_NEW_ADDRESS)
                 .businessHours(newBusinessHours)
                 .build();
-        assertThat(capturedRestaurant).usingRecursiveComparison().isEqualTo(expectedRestaurant);
+        assertThat(capturedRestaurantEntity).usingRecursiveComparison().isEqualTo(expectedRestaurantEntity);
     }
 
     @Test
     @DisplayName("should throw a EntityNotFoundException when the restaurant is not found in the database")
     void shouldThrowEntityNotFoundException() {
         // Given
-        final Restaurant restaurantWithUpdates = Restaurant
+        final RestaurantEntity restaurantEntityWithUpdates = RestaurantEntity
                 .builder()
                 .address(RESTAURANT_NEW_ADDRESS)
                 .businessHours(null)
@@ -166,6 +166,6 @@ class UpdateRestaurantUseCaseTest {
         assertThatThrownBy(() -> this.useCase.execute(UUID.fromString(RESTAURANT_ID), RESTAURANT_NEW_ADDRESS, null))
                 .isInstanceOf(EntityNotFoundException.class);
         verify(this.mockRestaurantGateway, times(1)).findById(UUID.fromString(RESTAURANT_ID));
-        verify(this.mockRestaurantGateway, times(0)).save(restaurantWithUpdates);
+        verify(this.mockRestaurantGateway, times(0)).save(restaurantEntityWithUpdates);
     }
 }

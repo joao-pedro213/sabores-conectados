@@ -1,8 +1,8 @@
 package com.postech.saboresconectados.core.controller;
 
-import com.postech.saboresconectados.core.domain.entities.DailySchedule;
-import com.postech.saboresconectados.core.domain.entities.Restaurant;
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.valueobjects.DailySchedule;
+import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.CuisineType;
 import com.postech.saboresconectados.core.domain.usecases.CreateRestaurantUseCase;
 import com.postech.saboresconectados.core.domain.usecases.DeleteRestaurantByIdUseCase;
@@ -11,7 +11,7 @@ import com.postech.saboresconectados.core.domain.usecases.RetrieveUserByIdUseCas
 import com.postech.saboresconectados.core.domain.usecases.UpdateRestaurantUseCase;
 import com.postech.saboresconectados.core.dtos.DailyScheduleDto;
 import com.postech.saboresconectados.core.dtos.NewRestaurantDto;
-import com.postech.saboresconectados.core.dtos.RestaurantOutputDto;
+import com.postech.saboresconectados.core.dtos.RestaurantDto;
 import com.postech.saboresconectados.core.dtos.UpdateRestaurantDto;
 import com.postech.saboresconectados.core.gateways.RestaurantGateway;
 import com.postech.saboresconectados.core.gateways.UserGateway;
@@ -36,32 +36,32 @@ public class RestaurantController {
         return new RestaurantController(restaurantDataSource, userDataSource);
     }
 
-    public RestaurantOutputDto createRestaurant(NewRestaurantDto newRestaurantDto) {
+    public RestaurantDto createRestaurant(NewRestaurantDto newRestaurantDto) {
         RestaurantGateway restaurantGateway = RestaurantGateway.create(this.restaurantDataSource);
         CreateRestaurantUseCase useCase = CreateRestaurantUseCase.create(restaurantGateway);
-        Restaurant restaurant = useCase.execute(this.toDomain(newRestaurantDto));
+        RestaurantEntity restaurantEntity = useCase.execute(this.toDomain(newRestaurantDto));
         RestaurantPresenter presenter = RestaurantPresenter.create();
-        return presenter.toDto(restaurant);
+        return presenter.toDto(restaurantEntity);
     }
 
-    public RestaurantOutputDto retrieveRestaurantById(UUID id) {
+    public RestaurantDto retrieveRestaurantById(UUID id) {
         RestaurantGateway restaurantGateway = RestaurantGateway.create(this.restaurantDataSource);
         RetrieveRestaurantByIdUseCase useCase = RetrieveRestaurantByIdUseCase.create(restaurantGateway);
-        Restaurant foundRestaurant = useCase.execute(id);
+        RestaurantEntity foundRestaurantEntity = useCase.execute(id);
         RestaurantPresenter presenter = RestaurantPresenter.create();
-        return presenter.toDto(foundRestaurant);
+        return presenter.toDto(foundRestaurantEntity);
     }
 
-    public RestaurantOutputDto updateRestaurant(UUID id, UpdateRestaurantDto updateRestaurantDto) {
+    public RestaurantDto updateRestaurant(UUID id, UpdateRestaurantDto updateRestaurantDto) {
         RestaurantGateway restaurantGateway = RestaurantGateway.create(this.restaurantDataSource);
         UpdateRestaurantUseCase useCase = UpdateRestaurantUseCase.create(restaurantGateway);
-        Restaurant updatedRestaurant = useCase
+        RestaurantEntity updatedRestaurantEntity = useCase
                 .execute(
                         id,
                         updateRestaurantDto.getAddress(),
                         this.toBusinessHours(updateRestaurantDto.getBusinessHours()));
         RestaurantPresenter presenter = RestaurantPresenter.create();
-        return presenter.toDto(updatedRestaurant);
+        return presenter.toDto(updatedRestaurantEntity);
     }
 
     public void deleteRestaurantById(UUID id) {
@@ -70,11 +70,11 @@ public class RestaurantController {
         useCase.execute(id);
     }
 
-    private Restaurant toDomain(NewRestaurantDto newRestaurantDto) {
+    private RestaurantEntity toDomain(NewRestaurantDto newRestaurantDto) {
         UserGateway userGateway = UserGateway.create(this.userDataSource);
         RetrieveUserByIdUseCase retrieveUserByIdUseCase = RetrieveUserByIdUseCase.create(userGateway);
-        User owner = retrieveUserByIdUseCase.execute(newRestaurantDto.getOwnerId());
-        return Restaurant
+        UserEntity owner = retrieveUserByIdUseCase.execute(newRestaurantDto.getOwnerId());
+        return RestaurantEntity
                 .builder()
                 .name(newRestaurantDto.getName())
                 .address(newRestaurantDto.getAddress())

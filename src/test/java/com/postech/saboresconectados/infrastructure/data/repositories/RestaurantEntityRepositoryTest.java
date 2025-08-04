@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.infrastructure.data.repositories;
 
-import com.postech.saboresconectados.infrastructure.data.models.UserModel;
+import com.postech.saboresconectados.infrastructure.data.models.RestaurantModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,21 +15,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(value = {"/infrastructure/data/repositories/user-test-sample.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-class UserRepositoryTest {
+@Sql(value = {"/infrastructure/data/repositories/restaurant-test-sample.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+class RestaurantEntityRepositoryTest {
     @Autowired
-    private UserRepository repository;
+    private RestaurantRepository repository;
 
     @Test
-    void shouldFindUserByLogin() {
+    void shouldFindRestaurantByLogin() {
         // Given
-        final String login = "mauro.7";
+        final String name = "Los Pollos Hermanos";
 
         // When
-        Optional<UserModel> foundUser = this.repository.findByLogin(login);
+        Optional<RestaurantModel> foundRestaurant = this.repository.findByName(name);
 
         // Then
-        assertThat(foundUser).isPresent();
-        assertThat(foundUser.get().getLogin()).isEqualTo(login);
+        assertThat(foundRestaurant).isPresent();
+        assertThat(foundRestaurant.get().getName()).isEqualTo(name);
     }
 }

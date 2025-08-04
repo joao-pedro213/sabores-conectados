@@ -13,7 +13,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class DeleteUserByIdUseCaseTest {
+class DeleteUserEntityByIdUseCaseTest {
     @Mock
     private UserGateway mockUserGateway;
 

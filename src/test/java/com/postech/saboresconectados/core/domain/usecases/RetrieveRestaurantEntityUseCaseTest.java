@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.Restaurant;
+import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.domain.exceptions.EntityNotFoundException;
 import com.postech.saboresconectados.core.gateways.RestaurantGateway;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class RetrieveRestaurantUseCaseTest {
+class RetrieveRestaurantEntityUseCaseTest {
     @Mock
     private RestaurantGateway mockRestaurantGateway;
 
@@ -77,19 +77,19 @@ class RetrieveRestaurantUseCaseTest {
     @DisplayName("Should find a Restaurant if it exists in the database")
     void shouldFindRestaurantById() {
         // Given
-        final Restaurant foundRestaurant = Restaurant
+        final RestaurantEntity foundRestaurantEntity = RestaurantEntity
                 .builder()
                 .id(RESTAURANT_ID)
                 .owner(this.userObjectMother.createSampleUser(getOwnerSampleData()))
                 .build();
 
-        when(this.mockRestaurantGateway.findById(RESTAURANT_ID)).thenReturn(Optional.of(foundRestaurant));
+        when(this.mockRestaurantGateway.findById(RESTAURANT_ID)).thenReturn(Optional.of(foundRestaurantEntity));
 
         // When
-        final Restaurant restaurant = this.useCase.execute(RESTAURANT_ID);
+        final RestaurantEntity restaurantEntity = this.useCase.execute(RESTAURANT_ID);
 
         // Then
-        assertThat(restaurant).isNotNull().isEqualTo(foundRestaurant);
+        assertThat(restaurantEntity).isNotNull().isEqualTo(foundRestaurantEntity);
         verify(this.mockRestaurantGateway, times(1)).findById(RESTAURANT_ID);
     }
 

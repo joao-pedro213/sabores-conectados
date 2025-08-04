@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.gateways;
 
-import com.postech.saboresconectados.core.domain.entities.Restaurant;
+import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.dtos.RestaurantDto;
 import com.postech.saboresconectados.core.interfaces.RestaurantDataSource;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class RestaurantGatewayTest {
+class RestaurantEntityGatewayTest {
     @Mock
     private RestaurantDataSource dataSource;
 
@@ -90,14 +90,14 @@ class RestaurantGatewayTest {
     @Test
     void shouldSaveRestaurant() {
         // Given
-        final Restaurant restaurantToSave = this.restaurantObjectMother
+        final RestaurantEntity restaurantEntityToSave = this.restaurantObjectMother
                 .createSampleRestaurant(this.restaurantSampleData);
         final RestaurantDto savedRestaurantDto = this.restaurantObjectMother
                 .createSampleRestaurantDto(this.restaurantSampleData);
         when(this.dataSource.save(any(RestaurantDto.class))).thenReturn(savedRestaurantDto);
 
         // When
-        final Restaurant savedRestaurant = this.gateway.save(restaurantToSave);
+        final RestaurantEntity savedRestaurantEntity = this.gateway.save(restaurantEntityToSave);
 
         // Then
         final ArgumentCaptor<RestaurantDto> argument = ArgumentCaptor.forClass(RestaurantDto.class);
@@ -107,9 +107,9 @@ class RestaurantGatewayTest {
         assertThat(capturedRestaurantDto)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedRestaurantDto);
-        assertThat(savedRestaurant).isNotNull();
-        final Restaurant expectedUpdatedRestaurant = restaurantToSave.toBuilder().build();
-        assertThat(savedRestaurant).usingRecursiveComparison().isEqualTo(expectedUpdatedRestaurant);
+        assertThat(savedRestaurantEntity).isNotNull();
+        final RestaurantEntity expectedUpdatedRestaurantEntity = restaurantEntityToSave.toBuilder().build();
+        assertThat(savedRestaurantEntity).usingRecursiveComparison().isEqualTo(expectedUpdatedRestaurantEntity);
     }
 
     @Test
@@ -120,14 +120,14 @@ class RestaurantGatewayTest {
         when(this.dataSource.findById(UUID.fromString(RESTAURANT_ID))).thenReturn(Optional.of(foundRestaurantDto));
 
         // When
-        Optional<Restaurant> foundRestaurant = this.gateway.findById(UUID.fromString(RESTAURANT_ID));
+        Optional<RestaurantEntity> foundRestaurant = this.gateway.findById(UUID.fromString(RESTAURANT_ID));
 
         // Then
         verify(this.dataSource, times(1)).findById(UUID.fromString(RESTAURANT_ID));
         assertThat(foundRestaurant).isPresent();
-        final Restaurant expectedFoundRestaurant = this.restaurantObjectMother
+        final RestaurantEntity expectedFoundRestaurantEntity = this.restaurantObjectMother
                 .createSampleRestaurant(this.restaurantSampleData);
-        assertThat(foundRestaurant.get()).usingRecursiveComparison().isEqualTo(expectedFoundRestaurant);
+        assertThat(foundRestaurant.get()).usingRecursiveComparison().isEqualTo(expectedFoundRestaurantEntity);
     }
 
     @Test
@@ -139,14 +139,14 @@ class RestaurantGatewayTest {
         when(this.dataSource.findByName(name)).thenReturn(Optional.of(foundRestaurantDto));
 
         // When
-        Optional<Restaurant> foundRestaurant = this.gateway.findByName(name);
+        Optional<RestaurantEntity> foundRestaurant = this.gateway.findByName(name);
 
         // Then
         verify(this.dataSource, times(1)).findByName(name);
         assertThat(foundRestaurant).isPresent();
-        final Restaurant expectedFoundRestaurant = this.restaurantObjectMother
+        final RestaurantEntity expectedFoundRestaurantEntity = this.restaurantObjectMother
                 .createSampleRestaurant(this.restaurantSampleData);
-        assertThat(foundRestaurant.get()).usingRecursiveComparison().isEqualTo(expectedFoundRestaurant);
+        assertThat(foundRestaurant.get()).usingRecursiveComparison().isEqualTo(expectedFoundRestaurantEntity);
     }
 
     @Test

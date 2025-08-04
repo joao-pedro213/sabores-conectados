@@ -1,4 +1,4 @@
-package com.postech.saboresconectados.core.domain.entities;
+package com.postech.saboresconectados.core.valueobjects;
 
 import lombok.Builder;
 import lombok.Getter;

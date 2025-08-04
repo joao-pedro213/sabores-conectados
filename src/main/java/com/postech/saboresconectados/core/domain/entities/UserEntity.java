@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 @Getter
 @Setter
 @Builder(toBuilder = true)
-public class User {
+public class UserEntity {
     private UUID id;
     private String name;
     private UserType userType;
@@ -27,7 +27,7 @@ public class User {
     private String address;
     private LocalDateTime lastUpdated;
 
-    private User(
+    private UserEntity(
             UUID id, String name, UserType userType,
             String email, String login, String password,
             String address, LocalDateTime lastUpdated) {
@@ -88,8 +88,8 @@ public class User {
     }
 
     public static class UserBuilder {
-        public User build() {
-            return new User(
+        public UserEntity build() {
+            return new UserEntity(
                     this.id, this.name, this.userType,
                     this.email, this.login, this.password,
                     this.address, this.lastUpdated);

@@ -1,7 +1,7 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.Restaurant;
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.domain.exceptions.RestaurantAlreadyExistsException;
 import com.postech.saboresconectados.core.gateways.RestaurantGateway;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class CreateRestaurantUseCaseTest {
+class CreateRestaurantEntityUseCaseTest {
     @Mock
     private RestaurantGateway mockRestaurantGateway;
 
@@ -62,45 +62,45 @@ class CreateRestaurantUseCaseTest {
     @DisplayName("Should create a new Restaurant if it doesn't exist in the database yet")
     void shouldCreateRestaurant() {
         // Given
-        final User owner = User
+        final UserEntity owner = UserEntity
                 .builder()
                 .userType(UserType.RESTAURANT_OWNER)
                 .email(VALID_EMAIL)
                 .login(VALID_LOGIN)
                 .password(VALID_PASSWORD)
                 .build();
-        final Restaurant newRestaurant = Restaurant.builder().name("Los Pollos Hermanos").owner(owner).build();
-        final Restaurant createdRestaurant = newRestaurant.toBuilder().build();
-        when(this.mockRestaurantGateway.findByName(newRestaurant.getName())).thenReturn(Optional.empty());
-        when(this.mockRestaurantGateway.save(newRestaurant)).thenReturn(createdRestaurant);
+        final RestaurantEntity newRestaurantEntity = RestaurantEntity.builder().name("Los Pollos Hermanos").owner(owner).build();
+        final RestaurantEntity createdRestaurantEntity = newRestaurantEntity.toBuilder().build();
+        when(this.mockRestaurantGateway.findByName(newRestaurantEntity.getName())).thenReturn(Optional.empty());
+        when(this.mockRestaurantGateway.save(newRestaurantEntity)).thenReturn(createdRestaurantEntity);
 
         // When
-        final Restaurant restaurant = this.useCase.execute(newRestaurant);
+        final RestaurantEntity restaurantEntity = this.useCase.execute(newRestaurantEntity);
 
         // Then
-        assertThat(restaurant).isNotNull().isEqualTo(createdRestaurant);
-        verify(this.mockRestaurantGateway, times(1)).findByName(newRestaurant.getName());
-        verify(this.mockRestaurantGateway, times(1)).save(newRestaurant);
+        assertThat(restaurantEntity).isNotNull().isEqualTo(createdRestaurantEntity);
+        verify(this.mockRestaurantGateway, times(1)).findByName(newRestaurantEntity.getName());
+        verify(this.mockRestaurantGateway, times(1)).save(newRestaurantEntity);
     }
 
     @Test
     @DisplayName("should throw a RestaurantAlreadyExistsException when the new restaurant is found in the database before its creation")
     void shouldThrowRestaurantAlreadyExist() {
         // Given
-        final User owner = User
+        final UserEntity owner = UserEntity
                 .builder()
                 .userType(UserType.RESTAURANT_OWNER)
                 .email(VALID_EMAIL)
                 .login(VALID_LOGIN)
                 .password(VALID_PASSWORD)
                 .build();
-        final Restaurant newRestaurant = Restaurant.builder().name("Los Pollos Hermanos").owner(owner).build();
-        when(this.mockRestaurantGateway.findByName(newRestaurant.getName())).thenReturn(Optional.of(newRestaurant));
+        final RestaurantEntity newRestaurantEntity = RestaurantEntity.builder().name("Los Pollos Hermanos").owner(owner).build();
+        when(this.mockRestaurantGateway.findByName(newRestaurantEntity.getName())).thenReturn(Optional.of(newRestaurantEntity));
 
         // When & Then
-        assertThatThrownBy(() -> this.useCase.execute(newRestaurant))
+        assertThatThrownBy(() -> this.useCase.execute(newRestaurantEntity))
                 .isInstanceOf(RestaurantAlreadyExistsException.class);
-        verify(this.mockRestaurantGateway, times(1)).findByName(newRestaurant.getName());
-        verify(this.mockRestaurantGateway, times(0)).save(newRestaurant);
+        verify(this.mockRestaurantGateway, times(1)).findByName(newRestaurantEntity.getName());
+        verify(this.mockRestaurantGateway, times(0)).save(newRestaurantEntity);
     }
 }

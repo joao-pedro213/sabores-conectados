@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.gateways;
 
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.dtos.UserDto;
 import com.postech.saboresconectados.core.interfaces.UserDataSource;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class UserGatewayTest {
+class UserEntityGatewayTest {
 
     @Mock
     private UserDataSource dataSource;
@@ -57,12 +57,12 @@ class UserGatewayTest {
     @Test
     void shouldSaveUser() {
         // Given
-        final User userToSave = this.userObjectMother.createSampleUser(this.userSampleData);
+        final UserEntity userEntityToSave = this.userObjectMother.createSampleUser(this.userSampleData);
         final UserDto savedUserDto = this.userObjectMother.createSampleUserDto(this.userSampleData);
         when(this.dataSource.save(any(UserDto.class))).thenReturn(savedUserDto);
 
         // When
-        final User savedUser = this.gateway.save(userToSave);
+        final UserEntity savedUserEntity = this.gateway.save(userEntityToSave);
 
         // Then
         final ArgumentCaptor<UserDto> argument = ArgumentCaptor.forClass(UserDto.class);
@@ -70,9 +70,9 @@ class UserGatewayTest {
         final UserDto capturedUserDto = argument.getValue();
         final UserDto expectedUserDto = savedUserDto.toBuilder().build();
         assertThat(capturedUserDto).usingRecursiveComparison().isEqualTo(expectedUserDto);
-        assertThat(savedUser).isNotNull();
-        final User expectedUpdatedUser = userToSave.toBuilder().build();
-        assertThat(savedUser).usingRecursiveComparison().isEqualTo(expectedUpdatedUser);
+        assertThat(savedUserEntity).isNotNull();
+        final UserEntity expectedUpdatedUserEntity = userEntityToSave.toBuilder().build();
+        assertThat(savedUserEntity).usingRecursiveComparison().isEqualTo(expectedUpdatedUserEntity);
     }
 
     @Test
@@ -82,13 +82,13 @@ class UserGatewayTest {
         when(this.dataSource.findById(ID)).thenReturn(Optional.of(foundUserDto));
 
         // When
-        Optional<User> foundUser = this.gateway.findById(ID);
+        Optional<UserEntity> foundUser = this.gateway.findById(ID);
 
         // Then
         verify(this.dataSource, times(1)).findById(ID);
         assertThat(foundUser).isPresent();
-        final User expectedFoundUser = this.userObjectMother.createSampleUser(this.userSampleData);
-        assertThat(foundUser.get()).usingRecursiveComparison().isEqualTo(expectedFoundUser);
+        final UserEntity expectedFoundUserEntity = this.userObjectMother.createSampleUser(this.userSampleData);
+        assertThat(foundUser.get()).usingRecursiveComparison().isEqualTo(expectedFoundUserEntity);
     }
 
     @Test
@@ -99,13 +99,13 @@ class UserGatewayTest {
         when(this.dataSource.findByLogin(login)).thenReturn(Optional.of(foundUserDto));
 
         // When
-        Optional<User> foundUser = this.gateway.findByLogin(login);
+        Optional<UserEntity> foundUser = this.gateway.findByLogin(login);
 
         // Then
         verify(this.dataSource, times(1)).findByLogin(login);
         assertThat(foundUser).isPresent();
-        final User expectedFoundUser = this.userObjectMother.createSampleUser(this.userSampleData);
-        assertThat(foundUser.get()).usingRecursiveComparison().isEqualTo(expectedFoundUser);
+        final UserEntity expectedFoundUserEntity = this.userObjectMother.createSampleUser(this.userSampleData);
+        assertThat(foundUser.get()).usingRecursiveComparison().isEqualTo(expectedFoundUserEntity);
     }
 
     @Test

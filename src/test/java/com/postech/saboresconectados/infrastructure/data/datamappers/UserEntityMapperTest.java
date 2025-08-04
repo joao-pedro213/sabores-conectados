@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserMapperTest {
+class UserEntityMapperTest {
     @Test
     void shouldMapUserDtoToUserModel() {
         // Given

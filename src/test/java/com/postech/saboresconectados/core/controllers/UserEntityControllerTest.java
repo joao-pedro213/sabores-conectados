@@ -1,7 +1,7 @@
 package com.postech.saboresconectados.core.controllers;
 
 import com.postech.saboresconectados.core.controller.UserController;
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.domain.usecases.ChangeUserPasswordUseCase;
 import com.postech.saboresconectados.core.domain.usecases.CreateUserUseCase;
@@ -11,7 +11,7 @@ import com.postech.saboresconectados.core.domain.usecases.RetrieveUserByIdUseCas
 import com.postech.saboresconectados.core.domain.usecases.UpdateUserUseCase;
 import com.postech.saboresconectados.core.dtos.NewUserDto;
 import com.postech.saboresconectados.core.dtos.UpdateUserDto;
-import com.postech.saboresconectados.core.dtos.UserOutputDto;
+import com.postech.saboresconectados.core.dtos.UserDto;
 import com.postech.saboresconectados.core.gateways.UserGateway;
 import com.postech.saboresconectados.core.interfaces.UserDataSource;
 import com.postech.saboresconectados.core.presenters.UserPresenter;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class UserControllerTest {
+class UserEntityControllerTest {
     @Mock
     private UserDataSource mockUserDataSource;
 
@@ -166,46 +166,46 @@ class UserControllerTest {
     void shouldCreateUser() {
         // Given
         final NewUserDto newUserDto = this.userObjectMother.createSampleNewUserDto(this.userSampleData);
-        final User createdUser = this.userObjectMother.createSampleUser(this.userSampleData);
-        when(this.mockCreateUserUseCase.execute(any(User.class))).thenReturn(createdUser);
-        final UserOutputDto createdUserOutputDto = UserOutputDto.builder().build();
-        when(this.mockUserPresenter.toDto(createdUser)).thenReturn(createdUserOutputDto);
+        final UserEntity createdUserEntity = this.userObjectMother.createSampleUser(this.userSampleData);
+        when(this.mockCreateUserUseCase.execute(any(UserEntity.class))).thenReturn(createdUserEntity);
+        final UserDto createdUserDto = UserDto.builder().build();
+        when(this.mockUserPresenter.toDto(createdUserEntity)).thenReturn(createdUserDto);
 
         // When
-        final UserOutputDto userOutputDto = this.controller.createUser(newUserDto);
+        final UserDto userDto = this.controller.createUser(newUserDto);
 
         // Then
-        final ArgumentCaptor<User> argument = ArgumentCaptor.forClass(User.class);
+        final ArgumentCaptor<UserEntity> argument = ArgumentCaptor.forClass(UserEntity.class);
         this.mockedStaticUserGateway.verify(() -> UserGateway.create(this.mockUserDataSource), times(1));
         this.mockedStaticCreateUserUseCase.verify(() -> CreateUserUseCase.create(this.mockUserGateway), times(1));
         verify(this.mockCreateUserUseCase, times(1)).execute(argument.capture());
         this.mockedStaticUserPresenter.verify(UserPresenter::create, times(1));
-        verify(this.mockUserPresenter, times(1)).toDto(createdUser);
-        final User capturedUser = argument.getValue();
-        final User expectedUser = createdUser
+        verify(this.mockUserPresenter, times(1)).toDto(createdUserEntity);
+        final UserEntity capturedUserEntity = argument.getValue();
+        final UserEntity expectedUserEntity = createdUserEntity
                 .toBuilder()
                 .id(null)
                 .lastUpdated(null)
                 .build();
-        assertThat(capturedUser).usingRecursiveComparison().isEqualTo(expectedUser);
-        assertThat(userOutputDto).isNotNull().isEqualTo(createdUserOutputDto);
+        assertThat(capturedUserEntity).usingRecursiveComparison().isEqualTo(expectedUserEntity);
+        assertThat(userDto).isNotNull().isEqualTo(createdUserDto);
     }
 
     @Test
     void shouldRetrieveUserById() {
         // Given
-        final User foundUser = this.userObjectMother
+        final UserEntity foundUserEntity = this.userObjectMother
                 .createSampleUser(this.userSampleData)
                 .toBuilder()
                 .id(ID)
                 .lastUpdated(LAST_UPDATED)
                 .build();
-        when(this.mockRetrieveUserByIdUseCase.execute(ID)).thenReturn(foundUser);
-        final UserOutputDto foundUserOutputDto = UserOutputDto.builder().build();
-        when(this.mockUserPresenter.toDto(foundUser)).thenReturn(foundUserOutputDto);
+        when(this.mockRetrieveUserByIdUseCase.execute(ID)).thenReturn(foundUserEntity);
+        final UserDto foundUserDto = UserDto.builder().build();
+        when(this.mockUserPresenter.toDto(foundUserEntity)).thenReturn(foundUserDto);
 
         // When
-        final UserOutputDto userOutputDto = this.controller.retrieveUserById(ID);
+        final UserDto userDto = this.controller.retrieveUserById(ID);
 
         // Then
         this.mockedStaticUserGateway.verify(() -> UserGateway.create(this.mockUserDataSource), times(1));
@@ -213,15 +213,15 @@ class UserControllerTest {
                 .verify(() -> RetrieveUserByIdUseCase.create(this.mockUserGateway), times(1));
         verify(this.mockRetrieveUserByIdUseCase, times(1)).execute(ID);
         this.mockedStaticUserPresenter.verify(UserPresenter::create, times(1));
-        verify(this.mockUserPresenter, times(1)).toDto(foundUser);
-        assertThat(userOutputDto).isNotNull().isEqualTo(foundUserOutputDto);
+        verify(this.mockUserPresenter, times(1)).toDto(foundUserEntity);
+        assertThat(userDto).isNotNull().isEqualTo(foundUserDto);
     }
 
     @Test
     void shouldUpdateUser() {
         // Given
         final UpdateUserDto updateUserDto = this.userObjectMother.createSampleUpdateUserDto(this.userSampleData);
-        final User updatedUser = this.userObjectMother.createSampleUser(this.userSampleData);
+        final UserEntity updatedUserEntity = this.userObjectMother.createSampleUser(this.userSampleData);
         when(
                 this.mockUpdateUserUseCase
                         .execute(
@@ -229,12 +229,12 @@ class UserControllerTest {
                                 updateUserDto.getName(),
                                 updateUserDto.getEmail(),
                                 updateUserDto.getAddress()))
-                .thenReturn(updatedUser);
-        final UserOutputDto updatedUserOutputDto = UserOutputDto.builder().build();
-        when(this.mockUserPresenter.toDto(updatedUser)).thenReturn(updatedUserOutputDto);
+                .thenReturn(updatedUserEntity);
+        final UserDto updatedUserDto = UserDto.builder().build();
+        when(this.mockUserPresenter.toDto(updatedUserEntity)).thenReturn(updatedUserDto);
 
         // When
-        final UserOutputDto userOutputDto = this.controller.updateUser(ID, updateUserDto);
+        final UserDto userDto = this.controller.updateUser(ID, updateUserDto);
 
         // Then
         this.mockedStaticUserGateway.verify(() -> UserGateway.create(this.mockUserDataSource), times(1));
@@ -246,8 +246,8 @@ class UserControllerTest {
                         updateUserDto.getEmail(),
                         updateUserDto.getAddress());
         this.mockedStaticUserPresenter.verify(UserPresenter::create, times(1));
-        verify(this.mockUserPresenter, times(1)).toDto(updatedUser);
-        assertThat(userOutputDto).isNotNull().isEqualTo(updatedUserOutputDto);
+        verify(this.mockUserPresenter, times(1)).toDto(updatedUserEntity);
+        assertThat(userDto).isNotNull().isEqualTo(updatedUserDto);
     }
 
     @Test

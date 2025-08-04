@@ -1,6 +1,6 @@
 package com.postech.saboresconectados.core.domain.usecases;
 
-import com.postech.saboresconectados.core.domain.entities.User;
+import com.postech.saboresconectados.core.domain.entities.UserEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
 import com.postech.saboresconectados.core.domain.exceptions.EntityNotFoundException;
 import com.postech.saboresconectados.core.gateways.UserGateway;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class UpdateUserUseCaseTest {
+class UpdateUserEntityUseCaseTest {
     @Mock
     private UserGateway mockUserGateway;
 
@@ -73,7 +73,7 @@ class UpdateUserUseCaseTest {
     @DisplayName("should update a User if it exists in the database")
     void shouldUpdateUser() {
         // Given
-        final User userWithUpdates = User
+        final UserEntity userEntityWithUpdates = UserEntity
                 .builder()
                 .id(ID)
                 .name(NEW_NAME)
@@ -84,38 +84,38 @@ class UpdateUserUseCaseTest {
                 .address(NEW_ADDRESS)
                 .lastUpdated(LocalDateTime.now().minusHours(3))
                 .build();
-        final User foundUser = this.userObjectMother
+        final UserEntity foundUserEntity = this.userObjectMother
                 .createSampleUser(this.userSampleData)
                 .toBuilder()
                 .id(ID)
                 .build();
-        when(this.mockUserGateway.findById(ID)).thenReturn(Optional.of(foundUser));
-        final User updatedUser = userWithUpdates.toBuilder().build();
-        when(this.mockUserGateway.save(any(User.class))).thenReturn(updatedUser);
+        when(this.mockUserGateway.findById(ID)).thenReturn(Optional.of(foundUserEntity));
+        final UserEntity updatedUserEntity = userEntityWithUpdates.toBuilder().build();
+        when(this.mockUserGateway.save(any(UserEntity.class))).thenReturn(updatedUserEntity);
 
         // When
-        final User user = this.useCase.execute(ID, NEW_NAME, NEW_EMAIL, NEW_ADDRESS);
+        final UserEntity userEntity = this.useCase.execute(ID, NEW_NAME, NEW_EMAIL, NEW_ADDRESS);
 
         // Then
-        assertThat(user).isNotNull().isEqualTo(updatedUser);
+        assertThat(userEntity).isNotNull().isEqualTo(updatedUserEntity);
         verify(this.mockUserGateway, times(1)).findById(ID);
-        final ArgumentCaptor<User> argument = ArgumentCaptor.forClass(User.class);
+        final ArgumentCaptor<UserEntity> argument = ArgumentCaptor.forClass(UserEntity.class);
         verify(this.mockUserGateway, times(1)).save(argument.capture());
-        final User capturedUser = argument.getValue();
-        final User expectedUser = foundUser
+        final UserEntity capturedUserEntity = argument.getValue();
+        final UserEntity expectedUserEntity = foundUserEntity
                 .toBuilder()
                 .name(NEW_NAME)
                 .email(NEW_EMAIL)
                 .address(NEW_ADDRESS)
                 .build();
-        assertThat(capturedUser).usingRecursiveComparison().isEqualTo(expectedUser);
+        assertThat(capturedUserEntity).usingRecursiveComparison().isEqualTo(expectedUserEntity);
     }
 
     @Test
     @DisplayName("should throw a EntityNotFoundException when the user is not found in the database")
     void shouldThrowEntityNotFoundException() {
         // Given
-        final User userWithUpdates = User
+        final UserEntity userEntityWithUpdates = UserEntity
                 .builder()
                 .id(ID)
                 .email("new.mail@domain.com")
@@ -128,7 +128,7 @@ class UpdateUserUseCaseTest {
         assertThatThrownBy(() -> this.useCase.execute(ID, NEW_NAME, NEW_EMAIL, NEW_ADDRESS))
                 .isInstanceOf(EntityNotFoundException.class);
         verify(this.mockUserGateway, times(1)).findById(ID);
-        verify(this.mockUserGateway, times(0)).save(userWithUpdates);
+        verify(this.mockUserGateway, times(0)).save(userEntityWithUpdates);
     }
 
     @AfterEach
