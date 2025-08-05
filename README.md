@@ -69,7 +69,7 @@ Para facilitar os testes e a interação com a API, disponibilizamos as coleçõ
 ### Como Importar:
 
 1.  **Baixe a coleção:** Você pode baixar o arquivo JSON diretamente do repositório:
-    * [`SaboresConectados.postman_collection.json`](./docs/postman/tech-challenge.json)
+    * [`sabores-conectados-collection.json`](./docs/postman/sabores-conectados-collection.json)
 2.  **Importe no Postman:**
     * Abra o Postman.
     * Clique em "File" (Arquivo) -> "Import" (Importar).
