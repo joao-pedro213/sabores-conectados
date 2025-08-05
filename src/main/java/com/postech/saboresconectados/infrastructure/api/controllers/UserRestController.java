@@ -77,6 +77,6 @@ public class UserRestController {
                 requestDto.getLogin(),
                 requestDto.getOldPassword(),
                 requestDto.getNewPassword());
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

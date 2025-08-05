@@ -264,7 +264,7 @@ class UserRestControllerTest {
                 .perform(post("/user/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         final Map<String, String> requestBodyMap = this.objectMapper.readValue(requestBody, LinkedHashMap.class);
         verify(this.mockUserController, times(1))
                 .changeUserPassword(
