@@ -1,0 +1,320 @@
+{
+	"info": {
+		"_postman_id": "3aab31e7-48d3-4f90-b290-1273545d9ede",
+		"name": "SaboresConectados API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11433311"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Gus Fring\",\n  \"userType\": \"Restaurant Owner\",\n  \"email\": \"gus@lospollos.com\",\n  \"login\": \"g.fring\",\n  \"password\": \"ixY40!7t'j9H\",\n  \"address\": \"Avenida Sebastião 319\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/user",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/user/201aeb20-79f6-47c5-a170-e8479a17c4c7",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"201aeb20-79f6-47c5-a170-e8479a17c4c7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Gus Fring Updated\",\n  \"email\": \"gus@lospollos.com\",\n  \"address\": \"Avenida Sebastião 319\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/user/201aeb20-79f6-47c5-a170-e8479a17c4c7",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"201aeb20-79f6-47c5-a170-e8479a17c4c7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/user/343a5a98-f931-4fbc-abc9-089c5c900136",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"343a5a98-f931-4fbc-abc9-089c5c900136"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change User Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"g.fring\",\n    \"oldPassword\": \"ixY40!7t'j9H\",\n    \"newPassword\": \"!qwerty251X\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/user/change-password",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Restaurant",
+			"item": [
+				{
+					"name": "Create Restaurant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Los Pollos Hermanos\",\n    \"address\": \"Rua Araraquara 201\",\n    \"cuisineType\": \"Mexican\",\n    \"businessHours\": {\n        \"TUESDAY\": {\n            \"openingTime\": \"10:00\",\n            \"closingTime\": \"19:00\"\n        },\n        \"WEDNESDAY\": {\n            \"openingTime\": \"10:00\",\n            \"closingTime\": \"19:00\"\n        },\n        \"THURSDAY\": {\n            \"openingTime\": \"10:00\",\n            \"closingTime\": \"19:00\"\n        },\n        \"FRIDAY\": {\n            \"openingTime\": \"10:00\",\n            \"closingTime\": \"22:00\"\n        },\n        \"SATURDAY\": {\n            \"openingTime\": \"10:00\",\n            \"closingTime\": \"22:00\"\n        }\n    },\n    \"ownerId\": \"343a5a98-f931-4fbc-abc9-089c5c900136\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/restaurant",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"restaurant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Restaurant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/restaurant/e9d8aceb-6e7f-4557-b8df-776e2a064aa6",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"restaurant",
+								"e9d8aceb-6e7f-4557-b8df-776e2a064aa6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Restaurant",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"Rua Araraquara 201\",\n    \"businessHours\": {\n        \"TUESDAY\": {\n            \"openingTime\": \"10:00\",\n            \"closingTime\": \"19:00\"\n        },\n        \"WEDNESDAY\": {\n            \"openingTime\": \"10:00\",\n            \"closingTime\": \"19:00\"\n        },\n        \"THURSDAY\": {\n            \"openingTime\": \"10:00\",\n            \"closingTime\": \"20:00\"\n        },\n        \"FRIDAY\": {\n            \"openingTime\": \"10:00\",\n            \"closingTime\": \"23:59\"\n        },\n        \"SATURDAY\": {\n            \"openingTime\": \"10:00\",\n            \"closingTime\": \"23:59\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/restaurant/e9d8aceb-6e7f-4557-b8df-776e2a064aa6",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"restaurant",
+								"e9d8aceb-6e7f-4557-b8df-776e2a064aa6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Restaurant",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/restaurant/94e9f905-b02d-4db8-b812-2cddca0e029d",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"restaurant",
+								"94e9f905-b02d-4db8-b812-2cddca0e029d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Menu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/restaurant/94e9f905-b02d-4db8-b812-2cddca0e029d/menu",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"restaurant",
+								"94e9f905-b02d-4db8-b812-2cddca0e029d",
+								"menu"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Item",
+			"item": [
+				{
+					"name": "Create Item",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"restaurantId\": \"94fc1b26-7429-430a-b46e-e6e89f7ea379\",\n  \"name\": \"Kids Chicken Nuggets\",\n  \"description\": \"Six tender chicken nuggets with a mild flavor, perfect for kids.\",\n  \"price\": 6.75,\n  \"availableOnlyAtRestaurant\": true,\n  \"photoPath\": \"/photos/los-pollos/nuggets.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/item",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Item",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Kids Chicken Nuggets Updated\",\n    \"description\": \"Six tender chicken nuggets with a mild flavor, perfect for kids.\",\n    \"price\": 6.75,\n    \"availableOnlyAtRestaurant\": false,\n    \"photoPath\": \"/photos/los-pollos/nuggets.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/item/b58fb0b7-721a-4a95-bd2b-1550d4264bdf",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"item",
+								"b58fb0b7-721a-4a95-bd2b-1550d4264bdf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Item",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/item/b58fb0b7-721a-4a95-bd2b-1550d4264bdf",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"item",
+								"b58fb0b7-721a-4a95-bd2b-1550d4264bdf"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
