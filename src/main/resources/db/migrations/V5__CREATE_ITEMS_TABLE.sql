@@ -1,6 +1,6 @@
 CREATE TABLE items (
     id UUID PRIMARY KEY,
-    restaurant_id UID NOT NULL REFERENCES restaurants(id),
+    restaurant_id UUID NOT NULL REFERENCES restaurants(id),
     name VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     price NUMERIC(10, 2) NOT NULL,

@@ -1,0 +1,10 @@
+{
+  "id": "f954b6dd-71bf-4fc0-b7b2-4cf88eaccfce",
+  "restaurantId": "3b33d868-b2d3-4d88-b791-ce19d60225bc",
+  "name": "Kids Chicken Nuggets",
+  "description": "Six tender chicken nuggets with a mild flavor, perfect for kids.",
+  "price": 6.75,
+  "availableOnlyAtRestaurant": false,
+  "photoPath": "/photos/los-pollos/nuggets.jpg",
+  "lastUpdated": "2025-08-04T22:56:49.388455306"
+}

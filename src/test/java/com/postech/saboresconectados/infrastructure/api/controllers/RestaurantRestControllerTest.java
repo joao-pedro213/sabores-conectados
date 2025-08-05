@@ -2,17 +2,24 @@ package com.postech.saboresconectados.infrastructure.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postech.saboresconectados.core.controller.RestaurantController;
+import com.postech.saboresconectados.core.dtos.ItemDto;
 import com.postech.saboresconectados.core.dtos.NewRestaurantDto;
 import com.postech.saboresconectados.core.dtos.RestaurantDto;
 import com.postech.saboresconectados.core.dtos.UpdateRestaurantDto;
+import com.postech.saboresconectados.core.interfaces.ItemDataSource;
+import com.postech.saboresconectados.helpers.ItemObjectMother;
 import com.postech.saboresconectados.helpers.JsonReaderUtil;
 import com.postech.saboresconectados.helpers.RestaurantObjectMother;
 import com.postech.saboresconectados.infrastructure.api.config.SecurityConfig;
 import com.postech.saboresconectados.infrastructure.api.controllers.exceptions.HttpStatusResolver;
+import com.postech.saboresconectados.infrastructure.api.dtos.ItemResponseDto;
 import com.postech.saboresconectados.infrastructure.api.dtos.NewRestaurantRequestDto;
+import com.postech.saboresconectados.infrastructure.api.dtos.RestaurantResponseDto;
 import com.postech.saboresconectados.infrastructure.api.dtos.UpdateRestaurantRequestDto;
+import com.postech.saboresconectados.infrastructure.data.ItemDataSourceJpa;
 import com.postech.saboresconectados.infrastructure.data.RestaurantDataSourceJpa;
 import com.postech.saboresconectados.infrastructure.data.UserDataSourceJpa;
+import com.postech.saboresconectados.infrastructure.data.datamappers.ItemMapper;
 import com.postech.saboresconectados.infrastructure.data.datamappers.RestaurantMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,8 +34,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -46,12 +56,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import(SecurityConfig.class)
 @WebMvcTest(RestaurantRestController.class)
-class RestaurantEntityRestControllerTest {
+class RestaurantRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
     private RestaurantDataSourceJpa mockRestaurantDataSourceJpa;
+
+    @MockitoBean
+    private ItemDataSourceJpa mockItemDataSourceJpa;
 
     @MockitoBean
     private UserDataSourceJpa mockUserDataSourceJpa;
@@ -70,8 +83,6 @@ class RestaurantEntityRestControllerTest {
 
     private final JsonReaderUtil jsonReaderUtil = new JsonReaderUtil("infrastructure/api/controllers/restaurant");
 
-    private final RestaurantObjectMother restaurantObjectMother = new RestaurantObjectMother();
-
     private static final String RESTAURANT_ID = "a238afda-dac3-4880-8769-b5be5141ce8b";
 
     private static final String RESTAURANT_LAST_UPDATED = "2025-08-03T13:27:35.081533224";
@@ -81,7 +92,7 @@ class RestaurantEntityRestControllerTest {
         this.mockedStaticHttpStatusResolver = mockStatic(HttpStatusResolver.class);
         this.mockedStaticRestaurantController = mockStatic(RestaurantController.class);
         this.mockedStaticRestaurantController
-                .when(() -> RestaurantController.create(any(RestaurantDataSourceJpa.class), any(UserDataSourceJpa.class)))
+                .when(() -> RestaurantController.build(any(RestaurantDataSourceJpa.class), any(UserDataSourceJpa.class), any(ItemDataSource.class)))
                 .thenReturn(this.mockRestaurantController);
         this.mockedStaticRestaurantMapper = mockStatic(RestaurantMapper.class);
     }
@@ -109,13 +120,17 @@ class RestaurantEntityRestControllerTest {
         this.mockedStaticRestaurantMapper
                 .when(() -> RestaurantMapper.toNewRestaurantDto(any(NewRestaurantRequestDto.class)))
                 .thenReturn(mappedNewRestaurantDto);
-        final RestaurantDto restaurantDto = this.restaurantObjectMother
-                .createSampleRestaurantDto(this.objectMapper.readValue(requestBody, TreeMap.class))
+        final RestaurantDto createdRestaurantDto = RestaurantDto.builder().build();
+        when(mockRestaurantController.createRestaurant(mappedNewRestaurantDto)).thenReturn(createdRestaurantDto);
+        final RestaurantResponseDto restaurantResponseDto = RestaurantObjectMother
+                .buildRestaurantResponseDto(this.objectMapper.readValue(requestBody, TreeMap.class))
                 .toBuilder()
                 .id(UUID.fromString(RESTAURANT_ID))
                 .lastUpdated(LocalDateTime.parse(RESTAURANT_LAST_UPDATED))
                 .build();
-        when(this.mockRestaurantController.createRestaurant(mappedNewRestaurantDto)).thenReturn(restaurantDto);
+        this.mockedStaticRestaurantMapper
+                .when(() -> RestaurantMapper.toRestaurantResponseDto(any(RestaurantDto.class)))
+                .thenReturn(restaurantResponseDto);
 
         //When & Then
         final MvcResult mvcResult = this.mockMvc
@@ -127,7 +142,7 @@ class RestaurantEntityRestControllerTest {
                 .andReturn();
         assertThat(this.objectMapper.readValue(mvcResult.getResponse().getContentAsString(), LinkedHashMap.class))
                 .isEqualTo(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class));
-        verify(this.mockRestaurantController, times(1)).createRestaurant(mappedNewRestaurantDto);
+        verify(this.mockRestaurantController, times(1)).createRestaurant(any(NewRestaurantDto.class));
     }
 
     @Test
@@ -135,14 +150,18 @@ class RestaurantEntityRestControllerTest {
         // Given
         final String expectedResponseBody = this.jsonReaderUtil
                 .readJsonFromFile("new-restaurant-response-body.json");
-        final RestaurantDto restaurantDto = this.restaurantObjectMother
-                .createSampleRestaurantDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
+        final RestaurantDto foundRestaurant = RestaurantDto.builder().build();
+        when(this.mockRestaurantController.retrieveRestaurantById(UUID.fromString(RESTAURANT_ID)))
+                .thenReturn(foundRestaurant);
+        final RestaurantResponseDto restaurantResponseDto = RestaurantObjectMother
+                .buildRestaurantResponseDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
                 .toBuilder()
                 .id(UUID.fromString(RESTAURANT_ID))
                 .lastUpdated(LocalDateTime.parse(RESTAURANT_LAST_UPDATED))
                 .build();
-        when(this.mockRestaurantController.retrieveRestaurantById(UUID.fromString(RESTAURANT_ID)))
-                .thenReturn(restaurantDto);
+        this.mockedStaticRestaurantMapper
+                .when(() -> RestaurantMapper.toRestaurantResponseDto(any(RestaurantDto.class)))
+                .thenReturn(restaurantResponseDto);
 
         //When & Then
         final MvcResult mvcResult = this.mockMvc
@@ -164,14 +183,18 @@ class RestaurantEntityRestControllerTest {
         this.mockedStaticRestaurantMapper
                 .when(() -> RestaurantMapper.toUpdateRestaurantDto(any(UpdateRestaurantRequestDto.class)))
                 .thenReturn(mappedUpdateRestaurantDto);
-        final RestaurantDto restaurantDto = this.restaurantObjectMother
-                .createSampleRestaurantDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
+        final RestaurantDto updatedRestaurantDto = RestaurantDto.builder().build();
+        when(this.mockRestaurantController.updateRestaurant(UUID.fromString(RESTAURANT_ID), mappedUpdateRestaurantDto))
+                .thenReturn(updatedRestaurantDto);
+        final RestaurantResponseDto restaurantResponseDto = RestaurantObjectMother
+                .buildRestaurantResponseDto(this.objectMapper.readValue(expectedResponseBody, LinkedHashMap.class))
                 .toBuilder()
                 .id(UUID.fromString(RESTAURANT_ID))
                 .lastUpdated(LocalDateTime.parse(RESTAURANT_LAST_UPDATED))
                 .build();
-        when(this.mockRestaurantController.updateRestaurant(UUID.fromString(RESTAURANT_ID), mappedUpdateRestaurantDto))
-                .thenReturn(restaurantDto);
+        this.mockedStaticRestaurantMapper
+                .when(() -> RestaurantMapper.toRestaurantResponseDto(any(RestaurantDto.class)))
+                .thenReturn(restaurantResponseDto);
 
         //When & Then
         final MvcResult mvcResult = this.mockMvc
@@ -195,5 +218,43 @@ class RestaurantEntityRestControllerTest {
                 .andExpect(status().isNoContent());
         verify(this.mockRestaurantController, times(1))
                 .deleteRestaurantById(UUID.fromString(RESTAURANT_ID));
+    }
+
+    @Test
+    void shouldRetrieveMenu() throws Exception {
+        // Given
+        try (MockedStatic<ItemMapper> mockedStaticItemMapper = mockStatic(ItemMapper.class)) {
+            Map<String, Object> itemSampleData = new LinkedHashMap<>();
+            itemSampleData.put("id", UUID.randomUUID().toString());
+            itemSampleData.put("restaurantId", UUID.randomUUID().toString());
+            itemSampleData.put("name", "Pepperoni Pizza");
+            itemSampleData.put("description", "A delicious Pepperoni Pizza");
+            itemSampleData.put("price", BigDecimal.valueOf(25.0));
+            itemSampleData.put("availableOnlyAtRestaurant", false);
+            itemSampleData.put("photoPath", "/peperoni-pizza.jpg");
+            itemSampleData.put("lastUpdated", LocalDateTime.parse("2025-08-04T00:00").toString());
+            final ItemDto itemFound = ItemObjectMother.buildItemDto(itemSampleData);
+            when(this.mockRestaurantController.retrieveItemsByRestaurantId(UUID.fromString(RESTAURANT_ID)))
+                    .thenReturn(List.of(itemFound));
+            final ItemResponseDto itemResponseDto = ItemObjectMother.buildItemResponseDto(itemSampleData);
+            mockedStaticItemMapper.when(() -> ItemMapper.toItemResponseDto(any(ItemDto.class)))
+                    .thenReturn(itemResponseDto);
+
+            // When & Then
+            final MvcResult mvcResult = this.mockMvc
+                    .perform(get("/restaurant/{id}/menu", RESTAURANT_ID))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            LinkedHashMap<String, Object> response = (LinkedHashMap<String, Object>) this.objectMapper
+                    .readValue(mvcResult.getResponse().getContentAsString(), List.class)
+                    .getFirst();
+            assertThat(response.get("id")).isEqualTo(itemSampleData.get("id"));
+            assertThat(response.get("restaurantId")).isEqualTo(itemSampleData.get("restaurantId"));
+            assertThat(response.get("name")).isEqualTo(itemSampleData.get("name"));
+            assertThat(response.get("description")).isEqualTo(itemSampleData.get("description"));
+            assertThat(response.get("price").toString()).isEqualTo(itemSampleData.get("price").toString());
+            assertThat((Boolean) response.get("availableOnlyAtRestaurant")).isEqualTo(itemSampleData.get("availableOnlyAtRestaurant"));
+            verify(this.mockRestaurantController, times(1)).retrieveItemsByRestaurantId(UUID.fromString(RESTAURANT_ID));
+        }
     }
 }

@@ -1,0 +1,8 @@
+{
+  "restaurantId": "3b33d868-b2d3-4d88-b791-ce19d60225bc",
+  "name": "Pollos Special Burger",
+  "description": "A delicious grilled chicken burger with our secret recipe sauce and fresh vegetables.",
+  "price": 12.99,
+  "availableOnlyAtRestaurant": true,
+  "photoPath": "/photos/los-pollos/special-burger.jpg"
+}

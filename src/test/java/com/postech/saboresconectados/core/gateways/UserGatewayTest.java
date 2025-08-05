@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class UserEntityGatewayTest {
+class UserGatewayTest {
 
     @Mock
     private UserDataSource dataSource;

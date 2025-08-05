@@ -11,7 +11,7 @@ import java.util.UUID;
 public class RetrieveUserByIdUseCase {
     private final UserGateway userGateway;
 
-    public static RetrieveUserByIdUseCase create(UserGateway userGateway) {
+    public static RetrieveUserByIdUseCase build(UserGateway userGateway) {
         return new RetrieveUserByIdUseCase(userGateway);
     }
 

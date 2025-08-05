@@ -11,7 +11,7 @@ import java.util.UUID;
 public class UpdateUserUseCase {
     private final UserGateway userGateway;
 
-    public static UpdateUserUseCase create(UserGateway userGateway) {
+    public static UpdateUserUseCase build(UserGateway userGateway) {
         return new UpdateUserUseCase(userGateway);
     }
 

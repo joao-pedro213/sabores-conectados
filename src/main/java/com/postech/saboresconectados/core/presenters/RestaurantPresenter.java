@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class RestaurantPresenter {
-    public static RestaurantPresenter create() {
+    public static RestaurantPresenter build() {
         return new RestaurantPresenter();
     }
 
-    public RestaurantDto toDto(RestaurantEntity restaurantEntity) {
+    public RestaurantDto toDto(RestaurantEntity restaurant) {
         Map<DayOfWeek, DailyScheduleDto> businessHours = new TreeMap<>();
-        restaurantEntity
+        restaurant
                 .getBusinessHours()
                 .forEach(((dayOfWeek, dailySchedule) ->
                         businessHours.put(
@@ -27,13 +27,13 @@ public class RestaurantPresenter {
                                         .build())));
         return RestaurantDto
                 .builder()
-                .id(restaurantEntity.getId())
-                .name(restaurantEntity.getName())
-                .address(restaurantEntity.getAddress())
-                .cuisineType(restaurantEntity.getCuisineType().getValue())
+                .id(restaurant.getId())
+                .name(restaurant.getName())
+                .address(restaurant.getAddress())
+                .cuisineType(restaurant.getCuisineType().getValue())
                 .businessHours(businessHours)
-                .owner(UserPresenter.create().toDto(restaurantEntity.getOwner()))
-                .lastUpdated(restaurantEntity.getLastUpdated())
+                .owner(UserPresenter.build().toDto(restaurant.getOwner()))
+                .lastUpdated(restaurant.getLastUpdated())
                 .build();
     }
 }

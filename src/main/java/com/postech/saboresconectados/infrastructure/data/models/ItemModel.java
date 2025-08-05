@@ -7,8 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,6 +24,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ItemModel {
     @Id
     @GeneratedValue
@@ -41,7 +45,7 @@ public class ItemModel {
     private BigDecimal price;
 
     @Column(nullable = false)
-    private boolean availableOnlyAtRestaurant;
+    private Boolean availableOnlyAtRestaurant;
 
     @Column(nullable = false)
     private String photoPath;

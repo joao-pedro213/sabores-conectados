@@ -1,6 +1,6 @@
 CREATE TABLE restaurants (
     id UUID PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) UNIQUE NOT NULL,
     address VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
     business_hours JSONB NOT NULL,

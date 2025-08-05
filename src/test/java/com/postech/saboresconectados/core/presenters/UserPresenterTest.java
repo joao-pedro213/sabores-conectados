@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserEntityPresenterTest {
+class UserPresenterTest {
     private UserPresenter presenter;
 
     private final UserObjectMother userObjectMother = new UserObjectMother();
@@ -23,7 +23,7 @@ class UserEntityPresenterTest {
 
     @BeforeEach
     void setUp() {
-        this.presenter = UserPresenter.create();
+        this.presenter = UserPresenter.build();
         this.userSampleData = new LinkedHashMap<>();
         this.userSampleData.put("name", "Laila");
         this.userSampleData.put("userType", UserType.RESTAURANT_OWNER.getValue());
@@ -38,14 +38,14 @@ class UserEntityPresenterTest {
         // Given
         final UUID id = UUID.randomUUID();
         final LocalDateTime lastUpdated = LocalDateTime.now();
-        final UserEntity userEntity = this.userObjectMother.createSampleUser(this.userSampleData)
+        final UserEntity user = this.userObjectMother.createSampleUser(this.userSampleData)
                 .toBuilder()
                 .id(id)
                 .lastUpdated(lastUpdated)
                 .build();
 
         // When
-        final UserDto userDto = this.presenter.toDto(userEntity);
+        final UserDto userDto = this.presenter.toDto(user);
 
         // Then
         final UserDto expectedUserDto = this.userObjectMother.createSampleUserDto(this.userSampleData)
@@ -53,7 +53,8 @@ class UserEntityPresenterTest {
                 .id(id)
                 .lastUpdated(lastUpdated)
                 .build();
-        assertThat(userDto).usingRecursiveComparison().isEqualTo(expectedUserDto);
+        assertThat(userDto).usingRecursiveComparison().ignoringFields("password").isEqualTo(expectedUserDto);
+        assertThat(userDto.getPassword()).matches("\\*+");
 
     }
 }

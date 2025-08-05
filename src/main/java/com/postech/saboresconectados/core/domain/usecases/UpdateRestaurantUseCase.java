@@ -14,19 +14,19 @@ import java.util.UUID;
 public class UpdateRestaurantUseCase {
     private final RestaurantGateway restaurantGateway;
 
-    public static UpdateRestaurantUseCase create(RestaurantGateway restaurantGateway) {
+    public static UpdateRestaurantUseCase build(RestaurantGateway restaurantGateway) {
         return new UpdateRestaurantUseCase(restaurantGateway);
     }
 
     public RestaurantEntity execute(UUID id, String address, Map<DayOfWeek, DailySchedule> businessHours) {
-        RestaurantEntity foundRestaurantEntity = this.restaurantGateway
+        RestaurantEntity foundRestaurant = this.restaurantGateway
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Restaurant"));
-        RestaurantEntity restaurantEntityWithUpdates = foundRestaurantEntity
+        RestaurantEntity restaurantWithUpdates = foundRestaurant
                 .toBuilder()
                 .address(address)
                 .businessHours(businessHours)
                 .build();
-        return this.restaurantGateway.save(restaurantEntityWithUpdates);
+        return this.restaurantGateway.save(restaurantWithUpdates);
     }
 }

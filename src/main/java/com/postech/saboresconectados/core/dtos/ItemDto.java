@@ -17,7 +17,7 @@ public class ItemDto {
     private String name;
     private String description;
     private BigDecimal price;
-    private boolean availableOnlyAtRestaurant;
+    private Boolean availableOnlyAtRestaurant;
     private String photoPath;
     private LocalDateTime lastUpdated;
 }

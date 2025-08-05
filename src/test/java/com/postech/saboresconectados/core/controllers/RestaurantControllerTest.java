@@ -14,6 +14,7 @@ import com.postech.saboresconectados.core.dtos.RestaurantDto;
 import com.postech.saboresconectados.core.dtos.UpdateRestaurantDto;
 import com.postech.saboresconectados.core.gateways.RestaurantGateway;
 import com.postech.saboresconectados.core.gateways.UserGateway;
+import com.postech.saboresconectados.core.interfaces.ItemDataSource;
 import com.postech.saboresconectados.core.interfaces.RestaurantDataSource;
 import com.postech.saboresconectados.core.interfaces.UserDataSource;
 import com.postech.saboresconectados.core.presenters.RestaurantPresenter;
@@ -40,17 +41,20 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class RestaurantEntityControllerTest {
+class RestaurantControllerTest {
     @Mock
     private RestaurantDataSource mockRestaurantDataSource;
+
+    @Mock
+    private UserDataSource mockUserDataSource;
+
+    @Mock
+    private ItemDataSource mockItemDataSource;
 
     @Mock
     private RestaurantGateway mockRestaurantGateway;
 
     private MockedStatic<RestaurantGateway> mockedStaticRestaurantGateway;
-
-    @Mock
-    private UserDataSource mockUserDataSource;
 
     @Mock
     private UserGateway mockUserGateway;
@@ -105,33 +109,33 @@ class RestaurantEntityControllerTest {
         MockitoAnnotations.openMocks(this);
         this.mockedStaticRestaurantGateway = mockStatic(RestaurantGateway.class);
         this.mockedStaticRestaurantGateway
-                .when(() -> RestaurantGateway.create(this.mockRestaurantDataSource))
+                .when(() -> RestaurantGateway.build(this.mockRestaurantDataSource))
                 .thenReturn(this.mockRestaurantGateway);
         this.mockedStaticUserGateway = mockStatic(UserGateway.class);
         this.mockedStaticUserGateway
-                .when(() -> UserGateway.create(this.mockUserDataSource))
+                .when(() -> UserGateway.build(this.mockUserDataSource))
                 .thenReturn(this.mockUserGateway);
         this.mockedStaticRestaurantPresenter = mockStatic(RestaurantPresenter.class);
-        this.mockedStaticRestaurantPresenter.when(RestaurantPresenter::create).thenReturn(this.mockRestaurantPresenter);
+        this.mockedStaticRestaurantPresenter.when(RestaurantPresenter::build).thenReturn(this.mockRestaurantPresenter);
         this.mockedStaticRetrieveUserByIdUseCase = mockStatic(RetrieveUserByIdUseCase.class);
         this.mockedStaticRetrieveUserByIdUseCase
-                .when(() -> RetrieveUserByIdUseCase.create(this.mockUserGateway))
+                .when(() -> RetrieveUserByIdUseCase.build(this.mockUserGateway))
                 .thenReturn(this.mockRetrieveUserByIdUseCase);
         this.mockedStaticCreateRestaurantUseCase = mockStatic(CreateRestaurantUseCase.class);
         this.mockedStaticCreateRestaurantUseCase
-                .when(() -> CreateRestaurantUseCase.create(this.mockRestaurantGateway))
+                .when(() -> CreateRestaurantUseCase.build(this.mockRestaurantGateway))
                 .thenReturn(this.mockCreateRestaurantUseCase);
         this.mockedStaticRetrieveRestaurantByIdUseCase = mockStatic(RetrieveRestaurantByIdUseCase.class);
         this.mockedStaticRetrieveRestaurantByIdUseCase
-                .when(() -> RetrieveRestaurantByIdUseCase.create(this.mockRestaurantGateway))
+                .when(() -> RetrieveRestaurantByIdUseCase.build(this.mockRestaurantGateway))
                 .thenReturn(this.mockRetrieveRestaurantByIdUseCase);
         this.mockedStaticUpdateRestaurantUseCase = mockStatic(UpdateRestaurantUseCase.class);
         this.mockedStaticUpdateRestaurantUseCase
-                .when(() -> UpdateRestaurantUseCase.create(this.mockRestaurantGateway))
+                .when(() -> UpdateRestaurantUseCase.build(this.mockRestaurantGateway))
                 .thenReturn(this.mockUpdateRestaurantUseCase);
         this.mockedStaticDeleteRestaurantByIdUseCase = mockStatic(DeleteRestaurantByIdUseCase.class);
         this.mockedStaticDeleteRestaurantByIdUseCase
-                .when(() -> DeleteRestaurantByIdUseCase.create(this.mockRestaurantGateway))
+                .when(() -> DeleteRestaurantByIdUseCase.build(this.mockRestaurantGateway))
                 .thenReturn(this.mockDeleteRestaurantByIdUseCase);
         this.restaurantSampleData = new LinkedHashMap<>();
         this.restaurantSampleData.put("id", RESTAURANT_ID.toString());
@@ -206,14 +210,14 @@ class RestaurantEntityControllerTest {
     void shouldCreateRestaurant() {
         // Given
         final NewRestaurantDto newRestaurantDto = this.restaurantObjectMother
-                .createSampleNewRestaurantDto(this.restaurantSampleData);
+                .buildNewRestaurantDto(this.restaurantSampleData);
         final RestaurantEntity createdRestaurantEntity = this.restaurantObjectMother
-                .createSampleRestaurant(this.restaurantSampleData);
+                .buildRestaurantEntity(this.restaurantSampleData);
         final RestaurantDto createdRestaurantDto = RestaurantDto.builder().build();
         final UserEntity foundUserEntity = createdRestaurantEntity.getOwner().toBuilder().build();
         when(this.mockRetrieveUserByIdUseCase.execute(newRestaurantDto.getOwnerId())).thenReturn(foundUserEntity);
         this.mockedStaticCreateRestaurantUseCase
-                .when(() -> CreateRestaurantUseCase.create(this.mockRestaurantGateway))
+                .when(() -> CreateRestaurantUseCase.build(this.mockRestaurantGateway))
                 .thenReturn(this.mockCreateRestaurantUseCase);
         when(this.mockCreateRestaurantUseCase.execute(any(RestaurantEntity.class))).thenReturn(createdRestaurantEntity);
         when(this.mockRestaurantPresenter.toDto(createdRestaurantEntity)).thenReturn(createdRestaurantDto);
@@ -224,15 +228,15 @@ class RestaurantEntityControllerTest {
         // Then
         final ArgumentCaptor<RestaurantEntity> argument = ArgumentCaptor.forClass(RestaurantEntity.class);
         this.mockedStaticRestaurantGateway
-                .verify(() -> RestaurantGateway.create(this.mockRestaurantDataSource), times(1));
+                .verify(() -> RestaurantGateway.build(this.mockRestaurantDataSource), times(1));
         this.mockedStaticCreateRestaurantUseCase
-                .verify(() -> CreateRestaurantUseCase.create(this.mockRestaurantGateway), times(1));
-        this.mockedStaticUserGateway.verify(() -> UserGateway.create(this.mockUserDataSource), times(1));
+                .verify(() -> CreateRestaurantUseCase.build(this.mockRestaurantGateway), times(1));
+        this.mockedStaticUserGateway.verify(() -> UserGateway.build(this.mockUserDataSource), times(1));
         this.mockedStaticRetrieveUserByIdUseCase
-                .verify(() -> RetrieveUserByIdUseCase.create(this.mockUserGateway), times(1));
+                .verify(() -> RetrieveUserByIdUseCase.build(this.mockUserGateway), times(1));
         verify(this.mockRetrieveUserByIdUseCase, times(1)).execute(newRestaurantDto.getOwnerId());
         verify(this.mockCreateRestaurantUseCase, times(1)).execute(argument.capture());
-        this.mockedStaticRestaurantPresenter.verify(RestaurantPresenter::create, times(1));
+        this.mockedStaticRestaurantPresenter.verify(RestaurantPresenter::build, times(1));
         verify(this.mockRestaurantPresenter, times(1)).toDto(createdRestaurantEntity);
         final RestaurantEntity capturedRestaurantEntity = argument.getValue();
         final RestaurantEntity expectedRestaurantEntity = createdRestaurantEntity.toBuilder().id(null).lastUpdated(null).build();
@@ -244,7 +248,7 @@ class RestaurantEntityControllerTest {
     void shouldRetrieveRestaurantById() {
         // Given
         final RestaurantEntity foundRestaurantEntity = this.restaurantObjectMother
-                .createSampleRestaurant(this.restaurantSampleData);
+                .buildRestaurantEntity(this.restaurantSampleData);
         when(this.mockRetrieveRestaurantByIdUseCase.execute(RESTAURANT_ID)).thenReturn(foundRestaurantEntity);
         final RestaurantDto foundRestaurantDto = RestaurantDto.builder().build();
         when(this.mockRestaurantPresenter.toDto(foundRestaurantEntity)).thenReturn(foundRestaurantDto);
@@ -254,11 +258,11 @@ class RestaurantEntityControllerTest {
 
         // Then
         this.mockedStaticRestaurantGateway
-                .verify(() -> RestaurantGateway.create(this.mockRestaurantDataSource), times(1));
+                .verify(() -> RestaurantGateway.build(this.mockRestaurantDataSource), times(1));
         this.mockedStaticRetrieveRestaurantByIdUseCase
-                .verify(() -> RetrieveRestaurantByIdUseCase.create(this.mockRestaurantGateway), times(1));
+                .verify(() -> RetrieveRestaurantByIdUseCase.build(this.mockRestaurantGateway), times(1));
         verify(this.mockRetrieveRestaurantByIdUseCase, times(1)).execute(RESTAURANT_ID);
-        this.mockedStaticRestaurantPresenter.verify(RestaurantPresenter::create, times(1));
+        this.mockedStaticRestaurantPresenter.verify(RestaurantPresenter::build, times(1));
         verify(this.mockRestaurantPresenter, times(1)).toDto(foundRestaurantEntity);
         assertThat(restaurantDto).isNotNull().isEqualTo(foundRestaurantDto);
     }
@@ -267,9 +271,9 @@ class RestaurantEntityControllerTest {
     void shouldUpdateRestaurant() {
         // Given
         final UpdateRestaurantDto updateRestaurantDto = this.restaurantObjectMother
-                .createSampleUpdateRestaurantDto(this.restaurantSampleData);
+                .buildUpdateRestaurantDto(this.restaurantSampleData);
         final RestaurantEntity updatedRestaurantEntity = this.restaurantObjectMother
-                .createSampleRestaurant(this.restaurantSampleData);
+                .buildRestaurantEntity(this.restaurantSampleData);
         when(
                 this.mockUpdateRestaurantUseCase
                         .execute(
@@ -285,15 +289,15 @@ class RestaurantEntityControllerTest {
 
         // Then
         this.mockedStaticRestaurantGateway
-                .verify(() -> RestaurantGateway.create(this.mockRestaurantDataSource), times(1));
+                .verify(() -> RestaurantGateway.build(this.mockRestaurantDataSource), times(1));
         this.mockedStaticUpdateRestaurantUseCase
-                .verify(() -> UpdateRestaurantUseCase.create(this.mockRestaurantGateway), times(1));
+                .verify(() -> UpdateRestaurantUseCase.build(this.mockRestaurantGateway), times(1));
         verify(this.mockUpdateRestaurantUseCase, times(1))
                 .execute(
                         eq(RESTAURANT_ID),
                         eq(updateRestaurantDto.getAddress()),
                         any(LinkedHashMap.class));
-        this.mockedStaticRestaurantPresenter.verify(RestaurantPresenter::create, times(1));
+        this.mockedStaticRestaurantPresenter.verify(RestaurantPresenter::build, times(1));
         verify(this.mockRestaurantPresenter, times(1)).toDto(updatedRestaurantEntity);
         assertThat(restaurantDto).isNotNull().isEqualTo(updatedRestaurantDto);
     }
@@ -305,9 +309,9 @@ class RestaurantEntityControllerTest {
 
         // Then
         this.mockedStaticRestaurantGateway
-                .verify(() -> RestaurantGateway.create(this.mockRestaurantDataSource), times(1));
+                .verify(() -> RestaurantGateway.build(this.mockRestaurantDataSource), times(1));
         this.mockedStaticDeleteRestaurantByIdUseCase
-                .verify(() -> DeleteRestaurantByIdUseCase.create(this.mockRestaurantGateway), times(1));
+                .verify(() -> DeleteRestaurantByIdUseCase.build(this.mockRestaurantGateway), times(1));
         verify(this.mockDeleteRestaurantByIdUseCase, times(1)).execute(RESTAURANT_ID);
     }
 }

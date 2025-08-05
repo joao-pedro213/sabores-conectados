@@ -87,7 +87,7 @@ public class UserEntity {
         return matcher.matches();
     }
 
-    public static class UserBuilder {
+    public static class UserEntityBuilder {
         public UserEntity build() {
             return new UserEntity(
                     this.id, this.name, this.userType,

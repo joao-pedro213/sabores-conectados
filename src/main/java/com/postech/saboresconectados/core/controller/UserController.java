@@ -22,54 +22,54 @@ import java.util.UUID;
 public class UserController {
     private final UserDataSource userDataSource;
 
-    public static UserController create(UserDataSource userDataSource) {
+    public static UserController build(UserDataSource userDataSource) {
         return new UserController(userDataSource);
     }
 
     public UserDto createUser(NewUserDto newUserDto) {
-        UserGateway userGateway = UserGateway.create(this.userDataSource);
-        CreateUserUseCase useCase = CreateUserUseCase.create(userGateway);
+        UserGateway userGateway = UserGateway.build(this.userDataSource);
+        CreateUserUseCase useCase = CreateUserUseCase.build(userGateway);
         UserEntity newUserEntity = useCase.execute(this.toDomain(newUserDto));
-        UserPresenter presenter = UserPresenter.create();
+        UserPresenter presenter = UserPresenter.build();
         return presenter.toDto(newUserEntity);
     }
 
     public UserDto retrieveUserById(UUID id) {
-        UserGateway userGateway = UserGateway.create(this.userDataSource);
-        RetrieveUserByIdUseCase useCase = RetrieveUserByIdUseCase.create(userGateway);
+        UserGateway userGateway = UserGateway.build(this.userDataSource);
+        RetrieveUserByIdUseCase useCase = RetrieveUserByIdUseCase.build(userGateway);
         UserEntity foundUserEntity = useCase.execute(id);
-        UserPresenter presenter = UserPresenter.create();
+        UserPresenter presenter = UserPresenter.build();
         return presenter.toDto(foundUserEntity);
     }
 
     public UserDto updateUser(UUID id, UpdateUserDto updateUserDto) {
-        UserGateway userGateway = UserGateway.create(this.userDataSource);
-        UpdateUserUseCase useCase = UpdateUserUseCase.create(userGateway);
+        UserGateway userGateway = UserGateway.build(this.userDataSource);
+        UpdateUserUseCase useCase = UpdateUserUseCase.build(userGateway);
         UserEntity updatedUserEntity = useCase
                 .execute(
                         id,
                         updateUserDto.getName(),
                         updateUserDto.getEmail(),
                         updateUserDto.getAddress());
-        UserPresenter presenter = UserPresenter.create();
+        UserPresenter presenter = UserPresenter.build();
         return presenter.toDto(updatedUserEntity);
     }
 
     public void deleteUserById(UUID id) {
-        UserGateway userGateway = UserGateway.create(this.userDataSource);
-        DeleteUserByIdUseCase useCase = DeleteUserByIdUseCase.create(userGateway);
+        UserGateway userGateway = UserGateway.build(this.userDataSource);
+        DeleteUserByIdUseCase useCase = DeleteUserByIdUseCase.build(userGateway);
         useCase.execute(id);
     }
 
     public void loginUser(String login, String password) {
-        UserGateway userGateway = UserGateway.create(this.userDataSource);
-        LoginUserUseCase useCase = LoginUserUseCase.create(userGateway);
+        UserGateway userGateway = UserGateway.build(this.userDataSource);
+        LoginUserUseCase useCase = LoginUserUseCase.build(userGateway);
         useCase.execute(login, password);
     }
 
     public void changeUserPassword(String login, String oldPassword, String newPassword) {
-        UserGateway userGateway = UserGateway.create(this.userDataSource);
-        ChangeUserPasswordUseCase useCase = ChangeUserPasswordUseCase.create(userGateway);
+        UserGateway userGateway = UserGateway.build(this.userDataSource);
+        ChangeUserPasswordUseCase useCase = ChangeUserPasswordUseCase.build(userGateway);
         useCase.execute(login, oldPassword, newPassword);
     }
 
