@@ -16,14 +16,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(value = {"/infrastructure/data/repositories/restaurant-test-sample.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-class RestaurantEntityRepositoryTest {
+class RestaurantRepositoryTest {
     @Autowired
     private RestaurantRepository repository;
 
     @Test
     void shouldFindRestaurantByLogin() {
         // Given
-        final String name = "Los Pollos Hermanos";
+        final String name = "Si Señor";
 
         // When
         Optional<RestaurantModel> foundRestaurant = this.repository.findByName(name);

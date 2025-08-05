@@ -21,24 +21,24 @@ import java.util.UUID;
 public class RestaurantGateway {
     private final RestaurantDataSource dataSource;
 
-    public static RestaurantGateway create(RestaurantDataSource dataSource) {
+    public static RestaurantGateway build(RestaurantDataSource dataSource) {
         return new RestaurantGateway(dataSource);
     }
 
     public RestaurantEntity save(RestaurantEntity restaurantEntity) {
         RestaurantDto restaurantToSave = this.toDto(restaurantEntity);
         RestaurantDto savedRestaurant = this.dataSource.save(restaurantToSave);
-        return this.toDomain(savedRestaurant);
+        return this.toEntity(savedRestaurant);
     }
 
     public Optional<RestaurantEntity> findById(UUID id) {
         Optional<RestaurantDto> foundRestaurant = this.dataSource.findById(id);
-        return foundRestaurant.map(this::toDomain);
+        return foundRestaurant.map(this::toEntity);
     }
 
     public Optional<RestaurantEntity> findByName(String name) {
         Optional<RestaurantDto> foundRestaurant = this.dataSource.findByName(name);
-        return foundRestaurant.map(this::toDomain);
+        return foundRestaurant.map(this::toEntity);
     }
 
     public void deleteById(UUID id) {
@@ -83,7 +83,7 @@ public class RestaurantGateway {
                 .build();
     }
 
-    private RestaurantEntity toDomain(RestaurantDto restaurantDto) {
+    private RestaurantEntity toEntity(RestaurantDto restaurantDto) {
         Map<DayOfWeek, DailySchedule> businessHours = new LinkedHashMap<>();
         restaurantDto
                 .getBusinessHours()

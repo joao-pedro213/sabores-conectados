@@ -34,14 +34,14 @@ public class UserRestController {
     @PostMapping
     public ResponseEntity<UserDto> create(@Valid @RequestBody NewUserRequestDto requestDto) {
         NewUserDto newUserDto = UserMapper.toNewUserDto(requestDto);
-        UserController userController = UserController.create(this.userDataSourceJpa);
+        UserController userController = UserController.build(this.userDataSourceJpa);
         UserDto userDto = userController.createUser(newUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> retrieve(@PathVariable UUID id) {
-        UserController userController = UserController.create(this.userDataSourceJpa);
+        UserController userController = UserController.build(this.userDataSourceJpa);
         UserDto userDto = userController.retrieveUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
@@ -51,28 +51,28 @@ public class UserRestController {
             @PathVariable UUID id,
             @Valid @RequestBody UpdateUserRequestDto requestDto) {
         UpdateUserDto updateUserDto = UserMapper.toUpdateUserDto(requestDto);
-        UserController userController = UserController.create(this.userDataSourceJpa);
+        UserController userController = UserController.build(this.userDataSourceJpa);
         UserDto userDto = userController.updateUser(id, updateUserDto);
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        UserController userController = UserController.create(this.userDataSourceJpa);
+        UserController userController = UserController.build(this.userDataSourceJpa);
         userController.deleteUserById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginUserRequestDto requestDto) {
-        UserController userController = UserController.create(this.userDataSourceJpa);
+        UserController userController = UserController.build(this.userDataSourceJpa);
         userController.loginUser(requestDto.getLogin(), requestDto.getPassword());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/change-password")
     public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangeUserPasswordRequestDto requestDto) {
-        UserController userController = UserController.create(this.userDataSourceJpa);
+        UserController userController = UserController.build(this.userDataSourceJpa);
         userController.changeUserPassword(
                 requestDto.getLogin(),
                 requestDto.getOldPassword(),

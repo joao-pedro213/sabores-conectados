@@ -27,7 +27,7 @@ public class CreateItemUseCase {
                 .orElseThrow(() -> new EntityNotFoundException("Restaurant"));
         ItemEntity newItem = ItemEntity
                 .builder()
-                .restaurantEntity(foundRestaurantEntity)
+                .restaurant(foundRestaurantEntity)
                 .name(name)
                 .description(description)
                 .price(price)

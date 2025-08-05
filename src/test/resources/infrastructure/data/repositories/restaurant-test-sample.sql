@@ -5,7 +5,7 @@ VALUES
 INSERT INTO restaurants (id, name, address, type, business_hours, owner_id, last_updated) VALUES
 (
     gen_random_uuid(),
-    'Los Pollos Hermanos',
+    'Si Señor',
     'Rua das Laranjeiras, 321 - São Paulo',
     'Mexican',
     '',

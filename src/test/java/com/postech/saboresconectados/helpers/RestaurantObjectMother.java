@@ -1,12 +1,14 @@
 package com.postech.saboresconectados.helpers;
 
-import com.postech.saboresconectados.core.valueobjects.DailySchedule;
 import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
 import com.postech.saboresconectados.core.domain.entities.enumerators.CuisineType;
 import com.postech.saboresconectados.core.dtos.DailyScheduleDto;
 import com.postech.saboresconectados.core.dtos.NewRestaurantDto;
 import com.postech.saboresconectados.core.dtos.RestaurantDto;
 import com.postech.saboresconectados.core.dtos.UpdateRestaurantDto;
+import com.postech.saboresconectados.core.valueobjects.DailySchedule;
+import com.postech.saboresconectados.infrastructure.api.dtos.DailyScheduleResponseDto;
+import com.postech.saboresconectados.infrastructure.api.dtos.RestaurantResponseDto;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -16,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class RestaurantObjectMother {
-    public RestaurantEntity createSampleRestaurant(Map<String, Object> sampleData) {
+    public static RestaurantEntity buildRestaurantEntity(Map<String, Object> sampleData) {
         Map<Object, Map<Object, Object>> businessHoursMap = (Map<Object, Map<Object, Object>>) sampleData.get("businessHours");
         Map<DayOfWeek, DailySchedule> businessHours = new LinkedHashMap<>();
         businessHoursMap.forEach((k, v) ->
@@ -44,7 +46,7 @@ public class RestaurantObjectMother {
                 .build();
     }
 
-    public NewRestaurantDto createSampleNewRestaurantDto(Map<String, Object> sampleData) {
+    public static NewRestaurantDto buildNewRestaurantDto(Map<String, Object> sampleData) {
         Map<Object, Map<Object, Object>> businessHoursMap = (Map<Object, Map<Object, Object>>) sampleData.get("businessHours");
         Map<DayOfWeek, DailyScheduleDto> businessHours = new LinkedHashMap<>();
         businessHoursMap.forEach((k, v) ->
@@ -64,7 +66,7 @@ public class RestaurantObjectMother {
                 .build();
     }
 
-    public UpdateRestaurantDto createSampleUpdateRestaurantDto(Map<String, Object> sampleData) {
+    public static UpdateRestaurantDto buildUpdateRestaurantDto(Map<String, Object> sampleData) {
         Map<Object, Map<Object, Object>> businessHoursMap = (Map<Object, Map<Object, Object>>) sampleData.get("businessHours");
         Map<DayOfWeek, DailyScheduleDto> businessHours = new LinkedHashMap<>();
         businessHoursMap.forEach((k, v) ->
@@ -81,7 +83,7 @@ public class RestaurantObjectMother {
                 .build();
     }
 
-    public RestaurantDto createSampleRestaurantDto(Map<String, Object> sampleData) {
+    public static RestaurantDto buildRestaurantDto(Map<String, Object> sampleData) {
         Map<Object, Map<Object, Object>> businessHoursMap = (Map<Object, Map<Object, Object>>) sampleData.get("businessHours");
         Map<DayOfWeek, DailyScheduleDto> businessHours = new LinkedHashMap<>();
         businessHoursMap.forEach((k, v) ->
@@ -102,6 +104,34 @@ public class RestaurantObjectMother {
                 .cuisineType(sampleData.get("cuisineType").toString())
                 .businessHours(businessHours)
                 .owner(new UserObjectMother().createSampleUserDto((Map<String, Object>) sampleData.get("owner")))
+                .lastUpdated(
+                        sampleData.get("lastUpdated") == null
+                                ? LocalDateTime.now()
+                                : LocalDateTime.parse(sampleData.get("lastUpdated").toString()))
+                .build();
+    }
+
+    public static RestaurantResponseDto buildRestaurantResponseDto(Map<String, Object> sampleData) {
+        Map<Object, Map<Object, Object>> businessHoursMap = (Map<Object, Map<Object, Object>>) sampleData.get("businessHours");
+        Map<DayOfWeek, DailyScheduleResponseDto> businessHours = new LinkedHashMap<>();
+        businessHoursMap.forEach((k, v) ->
+                businessHours.put(
+                        DayOfWeek.valueOf(k.toString()),
+                        DailyScheduleResponseDto
+                                .builder()
+                                .openingTime(LocalTime.parse(v.get("openingTime").toString()))
+                                .closingTime(LocalTime.parse(v.get("closingTime").toString())).build()));
+        return RestaurantResponseDto
+                .builder()
+                .id(
+                        sampleData.get("id") == null
+                                ? UUID.randomUUID()
+                                : UUID.fromString(sampleData.get("id").toString()))
+                .name(sampleData.get("name").toString())
+                .address(sampleData.get("address").toString())
+                .cuisineType(sampleData.get("cuisineType").toString())
+                .businessHours(businessHours)
+                .ownerId(UUID.fromString(sampleData.get("ownerId").toString()))
                 .lastUpdated(
                         sampleData.get("lastUpdated") == null
                                 ? LocalDateTime.now()

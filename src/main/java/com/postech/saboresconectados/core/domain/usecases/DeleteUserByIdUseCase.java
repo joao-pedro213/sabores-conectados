@@ -9,7 +9,7 @@ import java.util.UUID;
 public class DeleteUserByIdUseCase {
     private final UserGateway userGateway;
 
-    public static DeleteUserByIdUseCase create(UserGateway userGateway) {
+    public static DeleteUserByIdUseCase build(UserGateway userGateway) {
         return new DeleteUserByIdUseCase(userGateway);
     }
 

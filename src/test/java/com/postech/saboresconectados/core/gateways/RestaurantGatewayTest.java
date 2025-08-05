@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class RestaurantEntityGatewayTest {
+class RestaurantGatewayTest {
     @Mock
     private RestaurantDataSource dataSource;
 
@@ -33,40 +33,38 @@ class RestaurantEntityGatewayTest {
 
     private Map<String, Object> restaurantSampleData;
 
-    private final RestaurantObjectMother restaurantObjectMother = new RestaurantObjectMother();
+    private static final UUID RESTAURANT_ID = UUID.randomUUID();
 
-    private static final String RESTAURANT_ID = UUID.randomUUID().toString();
+    private static final LocalDateTime RESTAURANT_LAST_UPDATED = LocalDateTime.now();
 
-    private static final String RESTAURANT_LAST_UPDATED = LocalDateTime.now().toString();
+    private static final UUID OWNER_ID = UUID.randomUUID();
 
-    private static final String OWNER_ID = UUID.randomUUID().toString();
-
-    private static final String OWNER_LAST_UPDATED = LocalDateTime.now().toString();
+    private static final LocalDateTime OWNER_LAST_UPDATED = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         this.restaurantSampleData = new LinkedHashMap<>();
-        this.restaurantSampleData.put("id", RESTAURANT_ID);
+        this.restaurantSampleData.put("id", RESTAURANT_ID.toString());
         this.restaurantSampleData.put("name", "The Gemini Grill");
         this.restaurantSampleData.put("address", "123 AI Avenue, Tech City");
         this.restaurantSampleData.put("cuisineType", "Japanese");
         this.restaurantSampleData.put("businessHours", getBusinessHoursSampleData());
-        this.restaurantSampleData.put("ownerId", OWNER_ID);
+        this.restaurantSampleData.put("ownerId", OWNER_ID.toString());
         this.restaurantSampleData.put("owner", getOwnerSampleData());
-        this.restaurantSampleData.put("lastUpdated", RESTAURANT_LAST_UPDATED);
+        this.restaurantSampleData.put("lastUpdated", RESTAURANT_LAST_UPDATED.toString());
     }
 
     private static Map<String, Object> getOwnerSampleData() {
         Map<String, Object> ownerSampleData = new LinkedHashMap<>();
-        ownerSampleData.put("id", OWNER_ID);
+        ownerSampleData.put("id", OWNER_ID.toString());
         ownerSampleData.put("name", "Marcos");
         ownerSampleData.put("userType", UserType.RESTAURANT_OWNER.getValue());
         ownerSampleData.put("email", "marcos@mail.com");
         ownerSampleData.put("login", "marcos635");
         ownerSampleData.put("password", "09231s121!G");
         ownerSampleData.put("address", "82495 Xavier Keys, Emersonburgh, KS 65336-8213");
-        ownerSampleData.put("lastUpdated", OWNER_LAST_UPDATED);
+        ownerSampleData.put("lastUpdated", OWNER_LAST_UPDATED.toString());
         return ownerSampleData;
     }
 
@@ -90,14 +88,14 @@ class RestaurantEntityGatewayTest {
     @Test
     void shouldSaveRestaurant() {
         // Given
-        final RestaurantEntity restaurantEntityToSave = this.restaurantObjectMother
-                .createSampleRestaurant(this.restaurantSampleData);
-        final RestaurantDto savedRestaurantDto = this.restaurantObjectMother
-                .createSampleRestaurantDto(this.restaurantSampleData);
+        final RestaurantEntity restaurantToSave = RestaurantObjectMother
+                .buildRestaurantEntity(this.restaurantSampleData);
+        final RestaurantDto savedRestaurantDto = RestaurantObjectMother
+                .buildRestaurantDto(this.restaurantSampleData);
         when(this.dataSource.save(any(RestaurantDto.class))).thenReturn(savedRestaurantDto);
 
         // When
-        final RestaurantEntity savedRestaurantEntity = this.gateway.save(restaurantEntityToSave);
+        final RestaurantEntity savedRestaurant = this.gateway.save(restaurantToSave);
 
         // Then
         final ArgumentCaptor<RestaurantDto> argument = ArgumentCaptor.forClass(RestaurantDto.class);
@@ -107,35 +105,35 @@ class RestaurantEntityGatewayTest {
         assertThat(capturedRestaurantDto)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedRestaurantDto);
-        assertThat(savedRestaurantEntity).isNotNull();
-        final RestaurantEntity expectedUpdatedRestaurantEntity = restaurantEntityToSave.toBuilder().build();
-        assertThat(savedRestaurantEntity).usingRecursiveComparison().isEqualTo(expectedUpdatedRestaurantEntity);
+        assertThat(savedRestaurant).isNotNull();
+        final RestaurantEntity expectedUpdatedRestaurant = restaurantToSave.toBuilder().build();
+        assertThat(savedRestaurant).usingRecursiveComparison().isEqualTo(expectedUpdatedRestaurant);
     }
 
     @Test
     void shouldFindRestaurantById() {
         // Given
-        final RestaurantDto foundRestaurantDto = this.restaurantObjectMother
-                .createSampleRestaurantDto(this.restaurantSampleData);
-        when(this.dataSource.findById(UUID.fromString(RESTAURANT_ID))).thenReturn(Optional.of(foundRestaurantDto));
+        final RestaurantDto foundRestaurantDto = RestaurantObjectMother
+                .buildRestaurantDto(this.restaurantSampleData);
+        when(this.dataSource.findById(RESTAURANT_ID)).thenReturn(Optional.of(foundRestaurantDto));
 
         // When
-        Optional<RestaurantEntity> foundRestaurant = this.gateway.findById(UUID.fromString(RESTAURANT_ID));
+        Optional<RestaurantEntity> foundRestaurant = this.gateway.findById(RESTAURANT_ID);
 
         // Then
-        verify(this.dataSource, times(1)).findById(UUID.fromString(RESTAURANT_ID));
+        verify(this.dataSource, times(1)).findById(RESTAURANT_ID);
         assertThat(foundRestaurant).isPresent();
-        final RestaurantEntity expectedFoundRestaurantEntity = this.restaurantObjectMother
-                .createSampleRestaurant(this.restaurantSampleData);
-        assertThat(foundRestaurant.get()).usingRecursiveComparison().isEqualTo(expectedFoundRestaurantEntity);
+        final RestaurantEntity expectedFoundRestaurant = RestaurantObjectMother
+                .buildRestaurantEntity(this.restaurantSampleData);
+        assertThat(foundRestaurant.get()).usingRecursiveComparison().isEqualTo(expectedFoundRestaurant);
     }
 
     @Test
     void shouldFindRestaurantByName() {
         // Given
         final String name = this.restaurantSampleData.get("name").toString();
-        final RestaurantDto foundRestaurantDto = this.restaurantObjectMother
-                .createSampleRestaurantDto(this.restaurantSampleData);
+        final RestaurantDto foundRestaurantDto = RestaurantObjectMother
+                .buildRestaurantDto(this.restaurantSampleData);
         when(this.dataSource.findByName(name)).thenReturn(Optional.of(foundRestaurantDto));
 
         // When
@@ -144,17 +142,17 @@ class RestaurantEntityGatewayTest {
         // Then
         verify(this.dataSource, times(1)).findByName(name);
         assertThat(foundRestaurant).isPresent();
-        final RestaurantEntity expectedFoundRestaurantEntity = this.restaurantObjectMother
-                .createSampleRestaurant(this.restaurantSampleData);
-        assertThat(foundRestaurant.get()).usingRecursiveComparison().isEqualTo(expectedFoundRestaurantEntity);
+        final RestaurantEntity expectedFoundRestaurant = RestaurantObjectMother
+                .buildRestaurantEntity(this.restaurantSampleData);
+        assertThat(foundRestaurant.get()).usingRecursiveComparison().isEqualTo(expectedFoundRestaurant);
     }
 
     @Test
     void shouldDeleteRestaurantById() {
         // When
-        this.gateway.deleteById(UUID.fromString(RESTAURANT_ID));
+        this.gateway.deleteById(RESTAURANT_ID);
 
         // Then
-        verify(this.dataSource, times(1)).deleteById(UUID.fromString(RESTAURANT_ID));
+        verify(this.dataSource, times(1)).deleteById(RESTAURANT_ID);
     }
 }

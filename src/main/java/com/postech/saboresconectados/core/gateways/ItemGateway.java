@@ -1,6 +1,5 @@
 package com.postech.saboresconectados.core.gateways;
 
-import com.postech.saboresconectados.core.valueobjects.DailySchedule;
 import com.postech.saboresconectados.core.domain.entities.ItemEntity;
 import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
 import com.postech.saboresconectados.core.domain.entities.UserEntity;
@@ -11,11 +10,15 @@ import com.postech.saboresconectados.core.dtos.ItemDto;
 import com.postech.saboresconectados.core.dtos.RestaurantDto;
 import com.postech.saboresconectados.core.dtos.UserDto;
 import com.postech.saboresconectados.core.interfaces.ItemDataSource;
+import com.postech.saboresconectados.core.valueobjects.DailySchedule;
 import lombok.AllArgsConstructor;
 
 import java.time.DayOfWeek;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @AllArgsConstructor
 public class ItemGateway {
@@ -30,11 +33,24 @@ public class ItemGateway {
         return this.toItemEntity(itemDto);
     }
 
+    public Optional<ItemEntity> findById(UUID id) {
+        Optional<ItemDto> foundItem = this.dataSource.findById(id);
+        return foundItem.map(this::toItemEntity);
+    }
+
+    public List<ItemEntity> findAllByRestaurantId(UUID restaurantId) {
+        return this.dataSource.findAllByRestaurantId(restaurantId).stream().map(this::toItemEntity).toList();
+    }
+
+    public void deleteById(UUID id) {
+        this.dataSource.deleteById(id);
+    }
+
     private ItemDto toItemDto(ItemEntity itemEntity) {
         return ItemDto
                 .builder()
                 .id(itemEntity.getId())
-                .restaurant(this.toRestaurantDto(itemEntity.getRestaurantEntity()))
+                .restaurant(this.toRestaurantDto(itemEntity.getRestaurant()))
                 .name(itemEntity.getName())
                 .description(itemEntity.getDescription())
                 .price(itemEntity.getPrice())
@@ -86,11 +102,11 @@ public class ItemGateway {
         return ItemEntity
                 .builder()
                 .id(itemDto.getId())
-                .restaurantEntity(this.toRestaurantEntity(itemDto.getRestaurant()))
+                .restaurant(this.toRestaurantEntity(itemDto.getRestaurant()))
                 .name(itemDto.getName())
                 .description(itemDto.getDescription())
                 .price(itemDto.getPrice())
-                .availableOnlyAtRestaurant(itemDto.isAvailableOnlyAtRestaurant())
+                .availableOnlyAtRestaurant(itemDto.getAvailableOnlyAtRestaurant())
                 .photoPath(itemDto.getPhotoPath())
                 .lastUpdated(itemDto.getLastUpdated())
                 .build();

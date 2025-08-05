@@ -9,7 +9,9 @@ import com.postech.saboresconectados.core.dtos.NewRestaurantDto;
 import com.postech.saboresconectados.core.dtos.RestaurantDto;
 import com.postech.saboresconectados.core.dtos.UpdateRestaurantDto;
 import com.postech.saboresconectados.infrastructure.api.dtos.DailyScheduleRequestDto;
+import com.postech.saboresconectados.infrastructure.api.dtos.DailyScheduleResponseDto;
 import com.postech.saboresconectados.infrastructure.api.dtos.NewRestaurantRequestDto;
+import com.postech.saboresconectados.infrastructure.api.dtos.RestaurantResponseDto;
 import com.postech.saboresconectados.infrastructure.api.dtos.UpdateRestaurantRequestDto;
 import com.postech.saboresconectados.infrastructure.data.models.RestaurantModel;
 import lombok.AccessLevel;
@@ -96,6 +98,30 @@ public class RestaurantMapper {
                 .builder()
                 .address(updateRestaurantRequestDto.getAddress())
                 .businessHours(toBusinessHoursDto(updateRestaurantRequestDto.getBusinessHours()))
+                .build();
+    }
+
+    public static RestaurantResponseDto toRestaurantResponseDto(RestaurantDto restaurantDto) {
+        Map<DayOfWeek, DailyScheduleResponseDto> businessHours = new LinkedHashMap<>();
+        restaurantDto
+                .getBusinessHours()
+                .forEach(((dayOfWeek, dailySchedule) ->
+                        businessHours.put(
+                                dayOfWeek,
+                                DailyScheduleResponseDto
+                                        .builder()
+                                        .openingTime(dailySchedule.getOpeningTime())
+                                        .closingTime(dailySchedule.getClosingTime())
+                                        .build())));
+        return RestaurantResponseDto
+                .builder()
+                .id(restaurantDto.getId())
+                .name(restaurantDto.getName())
+                .address(restaurantDto.getAddress())
+                .cuisineType(restaurantDto.getCuisineType())
+                .businessHours(businessHours)
+                .ownerId(restaurantDto.getOwner().getId())
+                .lastUpdated(restaurantDto.getLastUpdated())
                 .build();
     }
 }

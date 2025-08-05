@@ -124,7 +124,7 @@ class UpdateRestaurantEntityUseCaseTest {
                 .lastUpdated(LocalDateTime.now().minusHours(3))
                 .build();
         final RestaurantEntity foundRestaurantEntity = this.restaurantObjectMother
-                .createSampleRestaurant(this.restaurantSampleData);
+                .buildRestaurantEntity(this.restaurantSampleData);
         when(this.mockRestaurantGateway
                 .findById(UUID.fromString(RESTAURANT_ID)))
                 .thenReturn(Optional.of(foundRestaurantEntity));

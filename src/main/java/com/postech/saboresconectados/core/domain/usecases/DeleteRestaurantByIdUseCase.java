@@ -9,7 +9,7 @@ import java.util.UUID;
 public class DeleteRestaurantByIdUseCase {
     private final RestaurantGateway restaurantGateway;
 
-    public static DeleteRestaurantByIdUseCase create(RestaurantGateway restaurantGateway) {
+    public static DeleteRestaurantByIdUseCase build(RestaurantGateway restaurantGateway) {
         return new DeleteRestaurantByIdUseCase(restaurantGateway);
     }
 

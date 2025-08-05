@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import(SecurityConfig.class)
 @WebMvcTest(UserRestController.class)
-class UserEntityRestControllerTest {
+class UserRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -79,7 +79,7 @@ class UserEntityRestControllerTest {
         this.mockedStaticHttpStatusResolver = mockStatic(HttpStatusResolver.class);
         this.mockedStaticUserController = mockStatic(UserController.class);
         this.mockedStaticUserController
-                .when(() -> UserController.create(any(UserDataSourceJpa.class)))
+                .when(() -> UserController.build(any(UserDataSourceJpa.class)))
                 .thenReturn(this.mockUserController);
         this.mockedStaticUserMapper = mockStatic(UserMapper.class);
     }
@@ -110,6 +110,7 @@ class UserEntityRestControllerTest {
                 .createSampleUserDto(this.objectMapper.readValue(requestBody, LinkedHashMap.class))
                 .toBuilder()
                 .id(UUID.fromString(ID))
+                .password("*********")
                 .lastUpdated(LocalDateTime.parse(LAST_UPDATED))
                 .build();
         when(this.mockUserController.createUser(mappedNewUserDto)).thenReturn(userDto);

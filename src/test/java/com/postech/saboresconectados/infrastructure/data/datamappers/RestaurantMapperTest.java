@@ -25,10 +25,9 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RestaurantEntityMapperTest {
+class RestaurantMapperTest {
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    // Mock DTOs and Models for testing
     private UserDto ownerUserDto;
     private UserModel ownerUserModel;
     private Map<DayOfWeek, DailyScheduleDto> businessHoursDto;

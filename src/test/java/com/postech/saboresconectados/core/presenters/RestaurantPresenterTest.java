@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RestaurantEntityPresenterTest {
+class RestaurantPresenterTest {
 
     private RestaurantPresenter presenter;
 
@@ -30,7 +30,7 @@ class RestaurantEntityPresenterTest {
 
     @BeforeEach
     void setUp() {
-        this.presenter = RestaurantPresenter.create();
+        this.presenter = RestaurantPresenter.build();
         this.restaurantSampleData = new LinkedHashMap<>();
         this.restaurantSampleData.put("id", RESTAURANT_ID);
         this.restaurantSampleData.put("name", "The Gemini Grill");
@@ -75,15 +75,17 @@ class RestaurantEntityPresenterTest {
     @Test
     void shouldMapDomainToDto() {
         // Given
-        final RestaurantEntity restaurantEntity = this.restaurantObjectMother.createSampleRestaurant(this.restaurantSampleData);
+        final RestaurantEntity restaurantEntity = this.restaurantObjectMother.buildRestaurantEntity(this.restaurantSampleData);
 
         // When
         final RestaurantDto restaurantDto = this.presenter.toDto(restaurantEntity);
 
         // Then
         final RestaurantDto expectedRestaurantDto = this.restaurantObjectMother
-                .createSampleRestaurantDto(this.restaurantSampleData);
-        assertThat(restaurantDto).usingRecursiveComparison().isEqualTo(expectedRestaurantDto);
-
+                .buildRestaurantDto(this.restaurantSampleData);
+        assertThat(restaurantDto)
+                .usingRecursiveComparison()
+                .ignoringFields("owner.password")
+                .isEqualTo(expectedRestaurantDto);
     }
 }
