@@ -12,12 +12,13 @@ public class ItemPresenter {
         return ItemDto
                 .builder()
                 .id(itemEntity.getId())
-                .restaurant(RestaurantPresenter.create().toDto(itemEntity.getRestaurantEntity()))
+                .restaurant(RestaurantPresenter.build().toDto(itemEntity.getRestaurant()))
                 .name(itemEntity.getName())
                 .description(itemEntity.getDescription())
                 .price(itemEntity.getPrice())
                 .availableOnlyAtRestaurant(itemEntity.isAvailableOnlyAtRestaurant())
                 .photoPath(itemEntity.getPhotoPath())
+                .lastUpdated(itemEntity.getLastUpdated())
                 .build();
     }
 }

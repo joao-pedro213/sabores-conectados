@@ -11,7 +11,7 @@ import java.util.Optional;
 public class ChangeUserPasswordUseCase {
     private UserGateway userGateway;
 
-    public static ChangeUserPasswordUseCase create(UserGateway userGateway) {
+    public static ChangeUserPasswordUseCase build(UserGateway userGateway) {
         return new ChangeUserPasswordUseCase(userGateway);
     }
 

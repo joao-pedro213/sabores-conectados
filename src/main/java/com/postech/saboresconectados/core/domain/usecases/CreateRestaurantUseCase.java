@@ -11,7 +11,7 @@ import java.util.Optional;
 public class CreateRestaurantUseCase {
     private final RestaurantGateway restaurantGateway;
 
-    public static CreateRestaurantUseCase create(RestaurantGateway restaurantGateway) {
+    public static CreateRestaurantUseCase build(RestaurantGateway restaurantGateway) {
         return new CreateRestaurantUseCase(restaurantGateway);
     }
 

@@ -13,7 +13,7 @@ import java.util.UUID;
 public class UserGateway {
     private final UserDataSource dataSource;
 
-    public static UserGateway create(UserDataSource dataSource) {
+    public static UserGateway build(UserDataSource dataSource) {
         return new UserGateway(dataSource);
     }
 

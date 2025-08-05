@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder(toBuilder = true)
 public class ItemEntity {
     private UUID id;
-    private RestaurantEntity restaurantEntity;
+    private RestaurantEntity restaurant;
     private String name;
     private String description;
     private BigDecimal price;

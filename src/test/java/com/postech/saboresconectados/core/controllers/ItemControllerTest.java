@@ -3,10 +3,15 @@ package com.postech.saboresconectados.core.controllers;
 import com.postech.saboresconectados.core.controller.ItemController;
 import com.postech.saboresconectados.core.domain.entities.ItemEntity;
 import com.postech.saboresconectados.core.domain.usecases.CreateItemUseCase;
+import com.postech.saboresconectados.core.domain.usecases.DeleteItemByIdUseCase;
+import com.postech.saboresconectados.core.domain.usecases.UpdateItemUseCase;
 import com.postech.saboresconectados.core.dtos.ItemDto;
 import com.postech.saboresconectados.core.dtos.NewItemDto;
+import com.postech.saboresconectados.core.dtos.UpdateItemDto;
 import com.postech.saboresconectados.core.gateways.ItemGateway;
+import com.postech.saboresconectados.core.gateways.RestaurantGateway;
 import com.postech.saboresconectados.core.interfaces.ItemDataSource;
+import com.postech.saboresconectados.core.interfaces.RestaurantDataSource;
 import com.postech.saboresconectados.core.presenters.ItemPresenter;
 import com.postech.saboresconectados.helpers.ItemObjectMother;
 import org.junit.jupiter.api.AfterEach;
@@ -26,11 +31,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ItemControllerTest {
     @Mock
     ItemDataSource itemDataSource;
+
+    @Mock
+    RestaurantDataSource restaurantDataSource;
 
     @InjectMocks
     private ItemController controller;
@@ -41,6 +51,8 @@ class ItemControllerTest {
     private MockedStatic<ItemPresenter> mockedStaticItemPresenter;
 
     private Map<String, Object> itemSampleData;
+
+    private static final UUID ITEM_ID = UUID.randomUUID();
 
     @BeforeEach
     void setUp() {
@@ -66,7 +78,7 @@ class ItemControllerTest {
     @Test
     void shouldCreateItem() {
         // Given
-        final NewItemDto newItemDto = ItemObjectMother.buildINewItemDto(this.itemSampleData);
+        final NewItemDto newItemDto = ItemObjectMother.buildNewItemDto(this.itemSampleData);
         final ItemEntity createdItem = ItemEntity.builder().build();
         final ItemDto mappedItemDto = ItemDto.builder().build();
         CreateItemUseCase mockUseCase = mock(CreateItemUseCase.class);
@@ -77,17 +89,60 @@ class ItemControllerTest {
                                 newItemDto.getName(),
                                 newItemDto.getDescription(),
                                 newItemDto.getPrice(),
-                                newItemDto.isAvailableOnlyAtRestaurant(),
+                                newItemDto.getAvailableOnlyAtRestaurant(),
                                 newItemDto.getPhotoPath())).thenReturn(createdItem);
         when(this.mockItemPresenter.toDto(any(ItemEntity.class))).thenReturn(mappedItemDto);
         try (MockedStatic<CreateItemUseCase> mockedStaticUseCase = mockStatic(CreateItemUseCase.class)) {
-            mockedStaticUseCase.when(() -> CreateItemUseCase.build(any(ItemGateway.class))).thenReturn(mockUseCase);
+            mockedStaticUseCase.when(() -> CreateItemUseCase.build(any(ItemGateway.class), any(RestaurantGateway.class))).thenReturn(mockUseCase);
 
             // When
             ItemDto itemDto = this.controller.createItem(newItemDto);
 
             // Then
             assertThat(itemDto).isNotNull().isEqualTo(mappedItemDto);
+        }
+    }
+
+    @Test
+    void shouldUpdateItem() {
+        // Given
+        final UpdateItemDto updateItemDto = ItemObjectMother.buildUpdateItemDto(this.itemSampleData);
+        final ItemEntity updatedItem = ItemEntity.builder().build();
+        final ItemDto mappedItemDto = ItemDto.builder().build();
+        UpdateItemUseCase mockUseCase = mock(UpdateItemUseCase.class);
+        when(
+                mockUseCase
+                        .execute(
+                                ITEM_ID,
+                                updateItemDto.getName(),
+                                updateItemDto.getDescription(),
+                                updateItemDto.getPrice(),
+                                updateItemDto.getAvailableOnlyAtRestaurant(),
+                                updateItemDto.getPhotoPath())).thenReturn(updatedItem);
+        when(this.mockItemPresenter.toDto(any(ItemEntity.class))).thenReturn(mappedItemDto);
+        try (MockedStatic<UpdateItemUseCase> mockedStaticUseCase = mockStatic(UpdateItemUseCase.class)) {
+            mockedStaticUseCase.when(() -> UpdateItemUseCase.build(any(ItemGateway.class))).thenReturn(mockUseCase);
+
+            // When
+            ItemDto itemDto = this.controller.updateItem(ITEM_ID, updateItemDto);
+
+            // Then
+            assertThat(itemDto).isNotNull().isEqualTo(mappedItemDto);
+        }
+    }
+
+    @Test
+    void shouldDeleteItemById() {
+        // Given
+        DeleteItemByIdUseCase mockUseCase = mock(DeleteItemByIdUseCase.class);
+        try (MockedStatic<DeleteItemByIdUseCase> mockedStaticUseCase = mockStatic(DeleteItemByIdUseCase.class)) {
+            mockedStaticUseCase.when(() -> DeleteItemByIdUseCase.build(any(ItemGateway.class))).thenReturn(mockUseCase);
+
+            // When
+            this.controller.deleteItemById(ITEM_ID);
+
+            // Then
+            verify(mockUseCase, times(1)).execute(ITEM_ID);
         }
     }
 }

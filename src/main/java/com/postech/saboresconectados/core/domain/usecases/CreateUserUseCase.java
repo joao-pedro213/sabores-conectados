@@ -11,7 +11,7 @@ import java.util.Optional;
 public class CreateUserUseCase {
     private final UserGateway userGateway;
 
-    public static CreateUserUseCase create(UserGateway userGateway) {
+    public static CreateUserUseCase build(UserGateway userGateway) {
         return new CreateUserUseCase(userGateway);
     }
 

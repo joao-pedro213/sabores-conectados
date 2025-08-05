@@ -37,7 +37,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class UserEntityControllerTest {
+class UserControllerTest {
     @Mock
     private UserDataSource mockUserDataSource;
 
@@ -97,33 +97,33 @@ class UserEntityControllerTest {
         MockitoAnnotations.openMocks(this);
         this.mockedStaticUserGateway = mockStatic(UserGateway.class);
         this.mockedStaticUserGateway
-                .when(() -> UserGateway.create(this.mockUserDataSource))
+                .when(() -> UserGateway.build(this.mockUserDataSource))
                 .thenReturn(this.mockUserGateway);
         this.mockedStaticUserPresenter = mockStatic(UserPresenter.class);
-        this.mockedStaticUserPresenter.when(UserPresenter::create).thenReturn(this.mockUserPresenter);
+        this.mockedStaticUserPresenter.when(UserPresenter::build).thenReturn(this.mockUserPresenter);
         this.mockedStaticCreateUserUseCase = mockStatic(CreateUserUseCase.class);
         this.mockedStaticCreateUserUseCase
-                .when(() -> CreateUserUseCase.create(this.mockUserGateway))
+                .when(() -> CreateUserUseCase.build(this.mockUserGateway))
                 .thenReturn(this.mockCreateUserUseCase);
         this.mockedStaticRetrieveUserByIdUseCase = mockStatic(RetrieveUserByIdUseCase.class);
         this.mockedStaticRetrieveUserByIdUseCase
-                .when(() -> RetrieveUserByIdUseCase.create(this.mockUserGateway))
+                .when(() -> RetrieveUserByIdUseCase.build(this.mockUserGateway))
                 .thenReturn(this.mockRetrieveUserByIdUseCase);
         this.mockedStaticUpdateUserUseCase = mockStatic(UpdateUserUseCase.class);
         this.mockedStaticUpdateUserUseCase
-                .when(() -> UpdateUserUseCase.create(this.mockUserGateway))
+                .when(() -> UpdateUserUseCase.build(this.mockUserGateway))
                 .thenReturn(this.mockUpdateUserUseCase);
         this.mockedStaticDeleteUserByIdUseCase = mockStatic(DeleteUserByIdUseCase.class);
         this.mockedStaticDeleteUserByIdUseCase
-                .when(() -> DeleteUserByIdUseCase.create(this.mockUserGateway))
+                .when(() -> DeleteUserByIdUseCase.build(this.mockUserGateway))
                 .thenReturn(this.mockDeleteUserByIdUseCase);
         this.mockedStaticLoginUserUseCase = mockStatic(LoginUserUseCase.class);
         this.mockedStaticLoginUserUseCase
-                .when(() -> LoginUserUseCase.create(this.mockUserGateway))
+                .when(() -> LoginUserUseCase.build(this.mockUserGateway))
                 .thenReturn(this.mockLoginUserUseCase);
         this.mockedStaticChangeUserPasswordUseCase = mockStatic(ChangeUserPasswordUseCase.class);
         this.mockedStaticChangeUserPasswordUseCase
-                .when(() -> ChangeUserPasswordUseCase.create(this.mockUserGateway))
+                .when(() -> ChangeUserPasswordUseCase.build(this.mockUserGateway))
                 .thenReturn(this.mockChangeUserPasswordUseCase);
         this.userSampleData = new LinkedHashMap<>();
         this.userSampleData.put("name", "Marcos");
@@ -176,10 +176,10 @@ class UserEntityControllerTest {
 
         // Then
         final ArgumentCaptor<UserEntity> argument = ArgumentCaptor.forClass(UserEntity.class);
-        this.mockedStaticUserGateway.verify(() -> UserGateway.create(this.mockUserDataSource), times(1));
-        this.mockedStaticCreateUserUseCase.verify(() -> CreateUserUseCase.create(this.mockUserGateway), times(1));
+        this.mockedStaticUserGateway.verify(() -> UserGateway.build(this.mockUserDataSource), times(1));
+        this.mockedStaticCreateUserUseCase.verify(() -> CreateUserUseCase.build(this.mockUserGateway), times(1));
         verify(this.mockCreateUserUseCase, times(1)).execute(argument.capture());
-        this.mockedStaticUserPresenter.verify(UserPresenter::create, times(1));
+        this.mockedStaticUserPresenter.verify(UserPresenter::build, times(1));
         verify(this.mockUserPresenter, times(1)).toDto(createdUserEntity);
         final UserEntity capturedUserEntity = argument.getValue();
         final UserEntity expectedUserEntity = createdUserEntity
@@ -208,11 +208,11 @@ class UserEntityControllerTest {
         final UserDto userDto = this.controller.retrieveUserById(ID);
 
         // Then
-        this.mockedStaticUserGateway.verify(() -> UserGateway.create(this.mockUserDataSource), times(1));
+        this.mockedStaticUserGateway.verify(() -> UserGateway.build(this.mockUserDataSource), times(1));
         this.mockedStaticRetrieveUserByIdUseCase
-                .verify(() -> RetrieveUserByIdUseCase.create(this.mockUserGateway), times(1));
+                .verify(() -> RetrieveUserByIdUseCase.build(this.mockUserGateway), times(1));
         verify(this.mockRetrieveUserByIdUseCase, times(1)).execute(ID);
-        this.mockedStaticUserPresenter.verify(UserPresenter::create, times(1));
+        this.mockedStaticUserPresenter.verify(UserPresenter::build, times(1));
         verify(this.mockUserPresenter, times(1)).toDto(foundUserEntity);
         assertThat(userDto).isNotNull().isEqualTo(foundUserDto);
     }
@@ -237,15 +237,15 @@ class UserEntityControllerTest {
         final UserDto userDto = this.controller.updateUser(ID, updateUserDto);
 
         // Then
-        this.mockedStaticUserGateway.verify(() -> UserGateway.create(this.mockUserDataSource), times(1));
-        this.mockedStaticUpdateUserUseCase.verify(() -> UpdateUserUseCase.create(this.mockUserGateway), times(1));
+        this.mockedStaticUserGateway.verify(() -> UserGateway.build(this.mockUserDataSource), times(1));
+        this.mockedStaticUpdateUserUseCase.verify(() -> UpdateUserUseCase.build(this.mockUserGateway), times(1));
         verify(this.mockUpdateUserUseCase, times(1))
                 .execute(
                         ID,
                         updateUserDto.getName(),
                         updateUserDto.getEmail(),
                         updateUserDto.getAddress());
-        this.mockedStaticUserPresenter.verify(UserPresenter::create, times(1));
+        this.mockedStaticUserPresenter.verify(UserPresenter::build, times(1));
         verify(this.mockUserPresenter, times(1)).toDto(updatedUserEntity);
         assertThat(userDto).isNotNull().isEqualTo(updatedUserDto);
     }
@@ -256,9 +256,9 @@ class UserEntityControllerTest {
         this.controller.deleteUserById(ID);
 
         // Then
-        this.mockedStaticUserGateway.verify(() -> UserGateway.create(this.mockUserDataSource), times(1));
+        this.mockedStaticUserGateway.verify(() -> UserGateway.build(this.mockUserDataSource), times(1));
         this.mockedStaticDeleteUserByIdUseCase
-                .verify(() -> DeleteUserByIdUseCase.create(this.mockUserGateway), times(1));
+                .verify(() -> DeleteUserByIdUseCase.build(this.mockUserGateway), times(1));
         verify(this.mockDeleteUserByIdUseCase, times(1)).execute(ID);
     }
 
@@ -272,9 +272,9 @@ class UserEntityControllerTest {
         this.controller.loginUser(login, password);
 
         // Then
-        this.mockedStaticUserGateway.verify(() -> UserGateway.create(this.mockUserDataSource), times(1));
+        this.mockedStaticUserGateway.verify(() -> UserGateway.build(this.mockUserDataSource), times(1));
         this.mockedStaticLoginUserUseCase
-                .verify(() -> LoginUserUseCase.create(this.mockUserGateway), times(1));
+                .verify(() -> LoginUserUseCase.build(this.mockUserGateway), times(1));
         verify(this.mockLoginUserUseCase, times(1)).execute(login, password);
     }
 
@@ -289,9 +289,9 @@ class UserEntityControllerTest {
         this.controller.changeUserPassword(login, oldPassword, newPassword);
 
         // Then
-        this.mockedStaticUserGateway.verify(() -> UserGateway.create(this.mockUserDataSource), times(1));
+        this.mockedStaticUserGateway.verify(() -> UserGateway.build(this.mockUserDataSource), times(1));
         this.mockedStaticChangeUserPasswordUseCase
-                .verify(() -> ChangeUserPasswordUseCase.create(this.mockUserGateway), times(1));
+                .verify(() -> ChangeUserPasswordUseCase.build(this.mockUserGateway), times(1));
         verify(this.mockChangeUserPasswordUseCase, times(1)).execute(login, oldPassword, newPassword);
     }
 }

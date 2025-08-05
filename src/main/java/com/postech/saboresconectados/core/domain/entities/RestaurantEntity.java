@@ -45,7 +45,7 @@ public class RestaurantEntity {
         this.owner = owner;
     }
 
-    public static class RestaurantBuilder {
+    public static class RestaurantEntityBuilder {
         public RestaurantEntity build() {
             return new RestaurantEntity(
                     this.id, this.owner, this.name, this.address,

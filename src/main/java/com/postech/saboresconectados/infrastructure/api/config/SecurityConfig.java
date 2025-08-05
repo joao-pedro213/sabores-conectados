@@ -23,6 +23,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/user", "/user/**").permitAll()
                         .requestMatchers("/restaurant", "/restaurant/**").permitAll()
+                        .requestMatchers("/item", "/item/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(withDefaults());
         return http.build();

@@ -11,7 +11,7 @@ import java.util.UUID;
 public class RetrieveRestaurantByIdUseCase {
     private final RestaurantGateway restaurantGateway;
 
-    public static RetrieveRestaurantByIdUseCase create(RestaurantGateway restaurantGateway) {
+    public static RetrieveRestaurantByIdUseCase build(RestaurantGateway restaurantGateway) {
         return new RetrieveRestaurantByIdUseCase(restaurantGateway);
     }
 
