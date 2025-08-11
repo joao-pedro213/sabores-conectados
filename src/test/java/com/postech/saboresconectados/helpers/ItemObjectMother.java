@@ -1,10 +1,10 @@
 package com.postech.saboresconectados.helpers;
 
-import com.postech.saboresconectados.core.domain.entities.ItemEntity;
-import com.postech.saboresconectados.core.dtos.ItemDto;
-import com.postech.saboresconectados.core.dtos.NewItemDto;
-import com.postech.saboresconectados.core.dtos.UpdateItemDto;
-import com.postech.saboresconectados.infrastructure.api.dtos.ItemResponseDto;
+import com.postech.saboresconectados.core.item.domain.entity.ItemEntity;
+import com.postech.saboresconectados.core.item.dto.ItemDto;
+import com.postech.saboresconectados.core.item.dto.NewItemDto;
+import com.postech.saboresconectados.core.item.dto.UpdateItemDto;
+import com.postech.saboresconectados.infrastructure.item.dto.ItemResponseDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

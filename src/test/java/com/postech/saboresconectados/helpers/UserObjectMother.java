@@ -1,10 +1,10 @@
 package com.postech.saboresconectados.helpers;
 
-import com.postech.saboresconectados.core.domain.entities.UserEntity;
-import com.postech.saboresconectados.core.domain.entities.enumerators.UserType;
-import com.postech.saboresconectados.core.dtos.NewUserDto;
-import com.postech.saboresconectados.core.dtos.UpdateUserDto;
-import com.postech.saboresconectados.core.dtos.UserDto;
+import com.postech.saboresconectados.core.user.domain.entity.UserEntity;
+import com.postech.saboresconectados.core.user.domain.entity.enumerator.UserType;
+import com.postech.saboresconectados.core.user.dto.NewUserDto;
+import com.postech.saboresconectados.core.user.dto.UpdateUserDto;
+import com.postech.saboresconectados.core.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.Map;
