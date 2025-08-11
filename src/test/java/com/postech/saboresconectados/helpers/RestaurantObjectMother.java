@@ -1,14 +1,14 @@
 package com.postech.saboresconectados.helpers;
 
-import com.postech.saboresconectados.core.domain.entities.RestaurantEntity;
-import com.postech.saboresconectados.core.domain.entities.enumerators.CuisineType;
-import com.postech.saboresconectados.core.dtos.DailyScheduleDto;
-import com.postech.saboresconectados.core.dtos.NewRestaurantDto;
-import com.postech.saboresconectados.core.dtos.RestaurantDto;
-import com.postech.saboresconectados.core.dtos.UpdateRestaurantDto;
-import com.postech.saboresconectados.core.valueobjects.DailySchedule;
-import com.postech.saboresconectados.infrastructure.api.dtos.DailyScheduleResponseDto;
-import com.postech.saboresconectados.infrastructure.api.dtos.RestaurantResponseDto;
+import com.postech.saboresconectados.core.restaurant.domain.entity.RestaurantEntity;
+import com.postech.saboresconectados.core.restaurant.domain.entity.enumerator.CuisineType;
+import com.postech.saboresconectados.core.restaurant.dto.DailyScheduleDto;
+import com.postech.saboresconectados.core.restaurant.dto.NewRestaurantDto;
+import com.postech.saboresconectados.core.restaurant.dto.RestaurantDto;
+import com.postech.saboresconectados.core.restaurant.dto.UpdateRestaurantDto;
+import com.postech.saboresconectados.core.restaurant.valueobject.DailySchedule;
+import com.postech.saboresconectados.infrastructure.restaurant.dto.DailyScheduleResponseDto;
+import com.postech.saboresconectados.infrastructure.restaurant.dto.RestaurantResponseDto;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
